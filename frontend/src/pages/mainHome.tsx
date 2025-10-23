@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { FiArrowRight, FiChevronDown, FiArrowUpRight, FiHelpCircle, FiUser, FiZap, FiWifi, FiSearch } from "react-icons/fi";
+import { FiArrowRight, FiChevronDown, FiHelpCircle, FiUser, FiZap, FiWifi, FiSearch } from "react-icons/fi";
 import {
   useMotionTemplate,
   useMotionValue,
@@ -82,7 +82,20 @@ const AuroraHero = () => {
   );
 };
 
+// Define proper TypeScript interfaces for FAQ data
+interface FAQItem {
+  question: string;
+  answer: string;
+  popular?: boolean;
+  steps?: string[];
+}
 
+interface FAQData {
+  general: FAQItem[];
+  billing: FAQItem[];
+  technical: FAQItem[];
+  installation: FAQItem[];
+}
 
 const Faq = () => {
   const [activeCategory, setActiveCategory] = useState('general');
@@ -155,7 +168,7 @@ const Faq = () => {
     }
   ];
 
-  const faqData = {
+  const faqData: FAQData = {
     general: [
       {
         question: "How do I set up my Rexifi internet?",
@@ -203,7 +216,7 @@ const Faq = () => {
     ]
   };
 
-  // Fixed variants - remove transition from variants and use inline transitions
+  // Fixed variants - remove transition from variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -219,11 +232,10 @@ const Faq = () => {
     visible: {
       opacity: 1,
       y: 0,
-      // Remove transition from here and handle it in the motion components directly
     }
   };
 
-  const filteredFAQs = faqData[activeCategory as keyof typeof faqData].filter(faq =>
+  const filteredFAQs = faqData[activeCategory as keyof FAQData].filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -342,7 +354,7 @@ const Faq = () => {
                           <p className="text-gray-300 mb-4">{faq.answer}</p>
                           {faq.steps && (
                               <div className="space-y-2">
-                                  {faq.steps.map((step, stepIndex) => (
+                                  {faq.steps.map((step: string, stepIndex: number) => (
                                       <div key={stepIndex} className="flex items-center gap-3 text-gray-400">
                                           <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center">
                                               <span className="text-blue-400 text-sm">{stepIndex + 1}</span>
@@ -388,7 +400,6 @@ const CTA = () => {
     visible: {
       opacity: 1,
       y: 0,
-      // Remove transition from here
     }
   };
 
