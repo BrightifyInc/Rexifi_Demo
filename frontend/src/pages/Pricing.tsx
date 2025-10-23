@@ -1,10 +1,10 @@
 import React from 'react'
-import Navbar from "../components/Navbar.jsx";
-import InstallationFeesSection from "../components/InstallationPrice.jsx";
-import RexifiFooter from '../components/Footer';
+import Navbar from "../components/Navbar.js";
+import InstallationFeesSection from "../components/InstallationPrice.js";
+import RexifiFooter from '../components/Footer.js';
 import { useState } from "react";
 import { motion } from 'framer-motion';
-import FreeSurveyModal from '../components/FreeSurveyModal';
+import FreeSurveyModal from '../components/FreeSurveyModal.js';
 
 
 const Pricing = () => {

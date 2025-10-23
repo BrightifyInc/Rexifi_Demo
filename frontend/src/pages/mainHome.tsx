@@ -11,14 +11,14 @@ import {
   animate,
 } from "framer-motion";
 
-import AboutUs from './AboutUs.jsx';
-import Navbar from "../components/Navbar.jsx";
-import BenefitsSection from "../components/Benefits.jsx";
+import AboutUs from './AboutUs.js';
+import Navbar from "../components/Navbar.js";
+import BenefitsSection from "../components/Benefits.js";
 import RexifiTestimonials from "../components/Testimonials.jsx";
-import InstallationFeesSection from "../components/InstallationPrice.jsx";
-import RexifiFooter from '../components/Footer';
+import InstallationFeesSection from "../components/InstallationPrice.js";
+import RexifiFooter from '../components/Footer.js';
 
-import FreeSurveyModal from '../components/FreeSurveyModal';
+import FreeSurveyModal from '../components/FreeSurveyModal.js';
 
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 

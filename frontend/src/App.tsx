@@ -1,37 +1,37 @@
 import { BrowserRouter, Routes,Route } from "react-router-dom"
-import Register from "./pages/Register.jsx"
-import Login from "./pages/Login.jsx"
-import MainHome from "./pages/mainHome.jsx";
-import AboutUs from "./pages/AboutUs.jsx";
-import CourageMap from "./pages/CourageMap.jsx";
-import Press from "./pages/Press.jsx";
-import Dashboard from "./backend/Dashboard.jsx";
-import InternetPlans from "./pages/InternetPlans.jsx";
-import SpeedTest from "./pages/SpeedTest.jsx";
-import Reliability from "./pages/Reliability.jsx";
-import Services from "./pages/Services.jsx";
-import Pricing from "./pages/Pricing.jsx";
-import Testimonials from "./pages/Testimonials.jsx";
-import Support from "./pages/Support.jsx";
-import Career from "./pages/Career.jsx";
-import OurStory from "./pages/OurStory.jsx";
-import GetFreeSurvey from "./pages/GetFreeSurvey.jsx";
+import Register from "./pages/Register"
+import Login from "./pages/Login"
+import MainHome from "./pages/mainHome";
+import AboutUs from "./pages/AboutUs";
+import CourageMap from "./pages/CourageMap";
+import Press from "./pages/Press";
+import Dashboard from "./backend/Dashboard";
+import InternetPlans from "./pages/InternetPlans";
+import SpeedTest from "./pages/SpeedTest";
+import Reliability from "./pages/Reliability";
+import Services from "./pages/Services";
+import Pricing from "./pages/Pricing";
+import Testimonials from "./pages/Testimonials";
+import Support from "./pages/Support";
+import Career from "./pages/Career";
+import OurStory from "./pages/OurStory";
+import GetFreeSurvey from "./pages/GetFreeSurvey";
 
-import Support1 from "./pages/Support1.jsx";
+import Support1 from "./pages/Support1";
 
-import Billing from "./backend/Billing.jsx";
-import Settings from "./backend/Settings.jsx"
-import UserSupport from "./backend/UserSupport.jsx"
-import Usage from "./backend/Usage.jsx"
+import Billing from "./backend/Billing";
+import Settings from "./backend/Settings"
+import UserSupport from "./backend/UserSupport"
+import Usage from "./backend/Usage"
 
 
-import LandingPage from "./pages/LandingPage.jsx";
+import LandingPage from "./pages/LandingPage";
 
 
 
 // In App.js
 import { AnimatePresence } from 'framer-motion';
-import ScrollToTop from './components/ScrollToTop.jsx';
+import ScrollToTop from './components/ScrollToTop';
 
 
 function App() {
