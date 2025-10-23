@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Stars } from "@react-three/drei";
@@ -9,12 +8,14 @@ import {
   useMotionValue,
   motion,
   animate,
+  Variants 
 } from "framer-motion";
+
 
 import AboutUs from './AboutUs.js';
 import Navbar from "../components/Navbar.js";
 import BenefitsSection from "../components/Benefits.js";
-import RexifiTestimonials from "../components/Testimonials.jsx";
+import RexifiTestimonials from "../components/Testimonials.js";
 import InstallationFeesSection from "../components/InstallationPrice.js";
 import RexifiFooter from '../components/Footer.js';
 
@@ -204,7 +205,7 @@ const Faq = () => {
     ]
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -214,17 +215,18 @@ const Faq = () => {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
+  
 
   const filteredFAQs = faqData[activeCategory].filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
