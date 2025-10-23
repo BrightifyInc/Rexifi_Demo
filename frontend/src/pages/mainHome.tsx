@@ -8,9 +8,7 @@ import {
   useMotionValue,
   motion,
   animate,
-  Variants 
 } from "framer-motion";
-
 
 import AboutUs from './AboutUs.js';
 import Navbar from "../components/Navbar.js";
@@ -205,7 +203,8 @@ const Faq = () => {
     ]
   };
 
-  const containerVariants: Variants = {
+  // Remove explicit Variants type and use inline definition
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -215,18 +214,17 @@ const Faq = () => {
     }
   };
 
-  const itemVariants: Variants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut" as const
+        ease: "easeOut"
       }
     }
   };
-  
 
   const filteredFAQs = faqData[activeCategory].filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
@@ -298,10 +296,9 @@ const Faq = () => {
         <motion.div
           layout
           className="max-w-4xl mx-auto space-y-4">
-            {/* Remove the outer AnimatePresence since we're using layout animations */}
             {filteredFAQs.map((faq, index) => (
                 <motion.div
-                  key={faq.id} // Use a unique ID instead of index for better performance
+                  key={index}
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -327,7 +324,6 @@ const Faq = () => {
                       </motion.div>
                   </button>
                     
-                    {/* Use layout animation instead of nested AnimatePresence */}
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ 
@@ -360,9 +356,6 @@ const Faq = () => {
                   </motion.div>
                 </motion.div>
             ))}
-
-
-            
         </motion.div>
         </div>
     </section>
@@ -375,6 +368,7 @@ const Faq = () => {
 const CTA = () => {
   const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
 
+  // Remove explicit Variants type and use inline definition
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -419,7 +413,6 @@ const CTA = () => {
                   onClick={() => setIsSurveyModalOpen(true)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  // onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:shadow-2xl"
               >
                   Request Your Free Survey
@@ -461,6 +454,3 @@ const MainHome = () => {
 };
 
 export default MainHome;
-
-
-
