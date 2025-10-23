@@ -203,7 +203,7 @@ const Faq = () => {
     ]
   };
 
-  // Fixed variants with proper easing types
+  // Fixed variants - remove transition from variants and use inline transitions
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -219,10 +219,7 @@ const Faq = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94] // cubic-bezier equivalent of "easeOut"
-      }
+      // Remove transition from here and handle it in the motion components directly
     }
   };
 
@@ -241,7 +238,11 @@ const Faq = () => {
             variants={containerVariants}
             className="text-center mb-12"
         >
-            <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <motion.h2 
+              variants={itemVariants}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
+            >
             Frequently Asked <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Questions</span>
             </motion.h2>
         </motion.div>
@@ -255,6 +256,7 @@ const Faq = () => {
             <motion.button
                 key={category.id}
                 variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveCategory(category.id)}
@@ -278,6 +280,7 @@ const Faq = () => {
         {/* Search */}
         <motion.div
             variants={itemVariants}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="max-w-2xl mx-auto mb-8"
         >
             <div className="relative">
@@ -303,6 +306,7 @@ const Faq = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="bg-gray-800/50 rounded-2xl border border-gray-700/50 overflow-hidden"
                 >
                   <button
@@ -317,7 +321,7 @@ const Faq = () => {
                       </div>
                       <motion.div
                           animate={{ rotate: selectedFAQ === index ? 180 : 0 }}
-                          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
                           className="text-gray-400"
                       >
                           <FiChevronDown className="w-5 h-5" />
@@ -330,7 +334,7 @@ const Faq = () => {
                         opacity: selectedFAQ === index ? 1 : 0, 
                         height: selectedFAQ === index ? 'auto' : 0 
                     }}
-                    transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
                     {selectedFAQ === index && (
@@ -368,7 +372,7 @@ const Faq = () => {
 const CTA = () => {
   const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
 
-  // Fixed variants with proper easing types
+  // Fixed variants - remove transition from variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -384,10 +388,7 @@ const CTA = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94] // cubic-bezier equivalent of "easeOut"
-      }
+      // Remove transition from here
     }
   };
 
@@ -402,13 +403,25 @@ const CTA = () => {
               viewport={{ once: true }}
               variants={containerVariants}
           >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
               Ready to Transform Your <span className="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">Connectivity</span>?
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+              >
               Join thousands of satisfied customers who trusted Rexifi for their internet solutions
               </motion.p>
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.div 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
               <motion.button
                   onClick={() => setIsSurveyModalOpen(true)}
                   whileHover={{ scale: 1.05 }}
