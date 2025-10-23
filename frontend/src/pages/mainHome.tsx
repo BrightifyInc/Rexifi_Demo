@@ -87,7 +87,7 @@ const AuroraHero = () => {
 const Faq = () => {
   const [activeCategory, setActiveCategory] = useState('general');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFAQ, setSelectedFAQ] = useState(null);
+  const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
 
   const colorMap = {
     blue: {
@@ -129,28 +129,28 @@ const Faq = () => {
       id: 'general',
       name: 'General Help',
       icon: <FiHelpCircle className="w-6 h-6" />,
-      color: 'blue',
+      color: 'blue' as const,
       count: 15
     },
     {
       id: 'billing',
       name: 'Billing & Payments',
       icon: <FiUser className="w-6 h-6" />,
-      color: 'green',
+      color: 'green' as const,
       count: 8
     },
     {
       id: 'technical',
       name: 'Technical Support',
       icon: <FiZap className="w-6 h-6" />,
-      color: 'purple',
+      color: 'purple' as const,
       count: 12
     },
     {
       id: 'installation',
       name: 'Installation',
       icon: <FiWifi className="w-6 h-6" />,
-      color: 'orange',
+      color: 'orange' as const,
       count: 6
     }
   ];
@@ -203,7 +203,7 @@ const Faq = () => {
     ]
   };
 
-  // Remove explicit Variants type and use inline definition
+  // Fixed variants with proper easing types
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -221,12 +221,12 @@ const Faq = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: [0.25, 0.46, 0.45, 0.94] // cubic-bezier equivalent of "easeOut"
       }
     }
   };
 
-  const filteredFAQs = faqData[activeCategory].filter(faq =>
+  const filteredFAQs = faqData[activeCategory as keyof typeof faqData].filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -317,7 +317,7 @@ const Faq = () => {
                       </div>
                       <motion.div
                           animate={{ rotate: selectedFAQ === index ? 180 : 0 }}
-                          transition={{ duration: 0.3 }}
+                          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                           className="text-gray-400"
                       >
                           <FiChevronDown className="w-5 h-5" />
@@ -330,7 +330,7 @@ const Faq = () => {
                         opacity: selectedFAQ === index ? 1 : 0, 
                         height: selectedFAQ === index ? 'auto' : 0 
                     }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                     className="overflow-hidden"
                   >
                     {selectedFAQ === index && (
@@ -368,7 +368,7 @@ const Faq = () => {
 const CTA = () => {
   const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
 
-  // Remove explicit Variants type and use inline definition
+  // Fixed variants with proper easing types
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -386,7 +386,7 @@ const CTA = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: [0.25, 0.46, 0.45, 0.94] // cubic-bezier equivalent of "easeOut"
       }
     }
   };
