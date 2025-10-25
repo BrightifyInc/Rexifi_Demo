@@ -1,16 +1,45 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiStar, FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiHeart, FiZap, FiUsers} from 'react-icons/fi';
+import { FiStar, FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiHeart, FiZap, FiUsers } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+// Define TypeScript interfaces
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  location: string;
+  rating: number;
+  category: string;
+  image: string;
+  video?: string;
+  text: string;
+  highlights: string[];
+  joined: string;
+  usage: string;
+}
+
+interface Category {
+  id: string;
+  label: string;
+  count: number;
+  color: string;
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  icon: JSX.Element;
+  color: string;
+}
 
 const Testimonials = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
-  const [selectedTestimonial, setSelectedTestimonial] = useState(null);
-  const sliderRef = useRef(null);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   const colorMap = {
     blue: {
@@ -47,7 +76,7 @@ const Testimonials = () => {
     }
   };
 
-  const categories = [
+  const categories: Category[] = [
     { id: 'all', label: 'All Reviews', count: 28, color: 'blue' },
     { id: 'speed', label: 'Internet Speed', count: 12, color: 'green' },
     { id: 'reliability', label: 'Reliability', count: 8, color: 'purple' },
@@ -55,7 +84,7 @@ const Testimonials = () => {
     { id: 'installation', label: 'Installation', count: 2, color: 'blue' }
   ];
 
-  const testimonials = [
+  const testimonials: Testimonial[] = [
     {
       id: 1,
       name: "Sarah Chen",
@@ -137,7 +166,7 @@ const Testimonials = () => {
     }
   ];
 
-  const stats = [
+  const stats: Stat[] = [
     { number: "4.9/5", label: "Average Rating", icon: <FiStar className="w-6 h-6" />, color: "orange" },
     { number: "500+", label: "Happy Customers", icon: <FiUsers className="w-6 h-6" />, color: "blue" },
     { number: "98%", label: "Would Recommend", icon: <FiHeart className="w-6 h-6" />, color: "purple" },
@@ -156,12 +185,12 @@ const Testimonials = () => {
     setCurrentSlide((prev) => (prev - 1 + filteredTestimonials.length) % filteredTestimonials.length);
   };
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
   // Auto-play functionality
-  React.useEffect(() => {
+  useEffect(() => {
     if (!autoplay) return;
 
     const interval = setInterval(() => {
@@ -186,15 +215,11 @@ const Testimonials = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
     }
   };
 
   const slideVariants = {
-    enter: (direction) => ({
+    enter: (direction: number) => ({
       x: direction > 0 ? 1000 : -1000,
       opacity: 0
     }),
@@ -203,14 +228,14 @@ const Testimonials = () => {
       x: 0,
       opacity: 1
     },
-    exit: (direction) => ({
+    exit: (direction: number) => ({
       zIndex: 0,
       x: direction < 0 ? 1000 : -1000,
       opacity: 0
     })
   };
 
-  const stars = (rating) => {
+  const stars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <FiStar
         key={i}
@@ -220,9 +245,7 @@ const Testimonials = () => {
   };
 
   return (
-
     <>
-
       <Navbar />
 
       <div className="min-h-screen bg-gray-950">
@@ -272,18 +295,18 @@ const Testimonials = () => {
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto"
             >
-              {stats.map((stat, index) => (
+              {stats.map((stat, index: number) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
                   className="text-center p-6 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10"
                 >
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${colorMap[stat.color].bg} mb-3`}>
-                    <div className={colorMap[stat.color].text}>
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${colorMap[stat.color as keyof typeof colorMap].bg} mb-3`}>
+                    <div className={colorMap[stat.color as keyof typeof colorMap].text}>
                       {stat.icon}
                     </div>
                   </div>
-                  <div className={`text-2xl md:text-3xl font-bold ${colorMap[stat.color].text} mb-1`}>{stat.number}</div>
+                  <div className={`text-2xl md:text-3xl font-bold ${colorMap[stat.color as keyof typeof colorMap].text} mb-1`}>{stat.number}</div>
                   <div className="text-gray-400 text-sm">{stat.label}</div>
                 </motion.div>
               ))}
@@ -301,10 +324,18 @@ const Testimonials = () => {
               variants={containerVariants}
               className="text-center mb-12"
             >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
                 Real Stories, <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Real Results</span>
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-400 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-400 max-w-2xl mx-auto"
+              >
                 Hear directly from our customers about their experience with Rexifi's internet services
               </motion.p>
             </motion.div>
@@ -318,6 +349,7 @@ const Testimonials = () => {
                 <motion.button
                   key={category.id}
                   variants={itemVariants}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
@@ -326,7 +358,7 @@ const Testimonials = () => {
                   }}
                   className={`flex items-center gap-3 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                     activeCategory === category.id
-                      ? `${colorMap[category.color].solid} text-white shadow-lg`
+                      ? `${colorMap[category.color as keyof typeof colorMap].solid} text-white shadow-lg`
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
@@ -357,7 +389,7 @@ const Testimonials = () => {
                 </button>
 
                 <div className="flex gap-2">
-                  {filteredTestimonials.map((_, index) => (
+                  {filteredTestimonials.map((_, index: number) => (
                     <button
                       key={index}
                       onClick={() => goToSlide(index)}
@@ -416,14 +448,13 @@ const Testimonials = () => {
                           </div>
 
                           <div className="relative">
-                            {/* <FiQuote className="w-8 h-8 text-blue-400/20 absolute -top-2 -left-2" /> */}
                             <p className="text-lg text-gray-300 leading-relaxed relative z-10">
                               "{filteredTestimonials[currentSlide].text}"
                             </p>
                           </div>
 
                           <div className="flex flex-wrap gap-2">
-                            {filteredTestimonials[currentSlide].highlights.map((highlight, idx) => (
+                            {filteredTestimonials[currentSlide].highlights.map((highlight: string, idx: number) => (
                               <span
                                 key={idx}
                                 className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20"
@@ -445,7 +476,7 @@ const Testimonials = () => {
                             <div className="w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full flex items-center justify-center">
                               <div className="w-48 h-48 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full flex items-center justify-center">
                                 <div className="w-32 h-32 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full flex items-center justify-center">
-                                  {/* <FiQuote className="w-16 h-16 text-blue-400/30" /> */}
+                                  {/* Visual element */}
                                 </div>
                               </div>
                             </div>
@@ -470,17 +501,22 @@ const Testimonials = () => {
               variants={containerVariants}
               className="text-center mb-12"
             >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
                 More <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Happy Customers</span>
               </motion.h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-              {testimonials.map((testimonial, index) => (
+              {testimonials.map((testimonial, index: number) => (
                 <motion.div
                   key={testimonial.id}
                   variants={itemVariants}
-                  whileHover="hover"
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  whileHover={{ scale: 1.02 }}
                   className="group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 cursor-pointer"
                   onClick={() => setSelectedTestimonial(testimonial)}
                 >
@@ -508,8 +544,8 @@ const Testimonials = () => {
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>{testimonial.location}</span>
                     <span className={`px-2 py-1 rounded-full ${
-                      colorMap[categories.find(c => c.id === testimonial.category)?.color || 'blue'].bg
-                    } ${colorMap[categories.find(c => c.id === testimonial.category)?.color || 'blue'].text}`}>
+                      colorMap[categories.find(c => c.id === testimonial.category)?.color as keyof typeof colorMap || 'blue'].bg
+                    } ${colorMap[categories.find(c => c.id === testimonial.category)?.color as keyof typeof colorMap || 'blue'].text}`}>
                       {categories.find(c => c.id === testimonial.category)?.label}
                     </span>
                   </div>
@@ -528,13 +564,25 @@ const Testimonials = () => {
               viewport={{ once: true }}
               variants={containerVariants}
             >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
                 Ready to Join Our <span className="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">Happy Family</span>?
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+              >
                 Experience the Rexifi difference and become our next success story
               </motion.p>
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.div 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
                 <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                   Get Started Today
                 </button>
@@ -563,7 +611,6 @@ const Testimonials = () => {
                 className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-blue-500/20"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Modal content for detailed testimonial view */}
                 <div className="p-8">
                   <div className="flex items-center gap-4 mb-6">
                     <img
@@ -598,7 +645,6 @@ const Testimonials = () => {
       </div>
 
       <RexifiFooter />
-
     </>
   );
 };
