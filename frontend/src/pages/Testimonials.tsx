@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiHeart, FiZap, FiUsers } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
@@ -39,7 +39,6 @@ const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
-  // Removed unused sliderRef since it's not being used
 
   const colorMap = {
     blue: {
