@@ -30,7 +30,7 @@ interface Category {
 interface Stat {
   number: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: string;
 }
 
@@ -39,7 +39,7 @@ const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  // Removed unused sliderRef since it's not being used
 
   const colorMap = {
     blue: {
@@ -295,9 +295,9 @@ const Testimonials = () => {
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto"
             >
-              {stats.map((stat, index: number) => (
+              {stats.map((stat) => (
                 <motion.div
-                  key={index}
+                  key={stat.number}
                   whileHover={{ scale: 1.05 }}
                   className="text-center p-6 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10"
                 >
@@ -511,7 +511,7 @@ const Testimonials = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-              {testimonials.map((testimonial, index: number) => (
+              {testimonials.map((testimonial) => (
                 <motion.div
                   key={testimonial.id}
                   variants={itemVariants}
