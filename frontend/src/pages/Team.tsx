@@ -10,6 +10,7 @@ interface ColorConfig {
   text: string;
   border: string;
   hover: string;
+  solid: string; // Added solid property
 }
 
 interface ColorMap {
@@ -49,25 +50,29 @@ const Team = () => {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
       border: "border-blue-500/20",
-      hover: "hover:border-blue-400"
+      hover: "hover:border-blue-400",
+      solid: "bg-blue-500" // Added solid color
     },
     purple: {
       bg: "bg-purple-500/10",
       text: "text-purple-400",
       border: "border-purple-500/20",
-      hover: "hover:border-purple-400"
+      hover: "hover:border-purple-400",
+      solid: "bg-purple-500" // Added solid color
     },
     green: {
       bg: "bg-green-500/10",
       text: "text-green-400",
       border: "border-green-500/20",
-      hover: "hover:border-green-400"
+      hover: "hover:border-green-400",
+      solid: "bg-green-500" // Added solid color
     },
     orange: {
       bg: "bg-orange-500/10",
       text: "text-orange-400",
       border: "border-orange-500/20",
-      hover: "hover:border-orange-400"
+      hover: "hover:border-orange-400",
+      solid: "bg-orange-500" // Added solid color
     }
   };
 
@@ -193,7 +198,7 @@ const Team = () => {
   ];
 
   const [activeDepartment, setActiveDepartment] = useState<string>("all");
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  // Removed unused selectedMember state since it's not being used
 
   const filteredMembers = activeDepartment === "all" 
     ? teamMembers 
@@ -201,7 +206,6 @@ const Team = () => {
 
   return (
     <>
-
       <Navbar />
 
       {/* Hero Section */}
@@ -352,7 +356,7 @@ const Team = () => {
                 onClick={() => setActiveDepartment(dept.name)}
                 className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                   activeDepartment === dept.name
-                    ? `${colorMap[dept.color].solid || 'bg-blue-500'} text-white shadow-lg`
+                    ? `${colorMap[dept.color].solid} text-white shadow-lg`
                     : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                 }`}
               >
@@ -370,8 +374,7 @@ const Team = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className={`group relative p-6 rounded-2xl bg-gray-900/50 backdrop-blur-sm border ${colorMap[member.color].border} ${colorMap[member.color].hover} transition-all duration-300 hover:scale-105 cursor-pointer`}
-                onClick={() => setSelectedMember(member)}
+                className={`group relative p-6 rounded-2xl bg-gray-900/50 backdrop-blur-sm border ${colorMap[member.color].border} ${colorMap[member.color].hover} transition-all duration-300 hover:scale-105`}
               >
                 <div className="flex items-start space-x-4 mb-4">
                   <img
@@ -461,7 +464,6 @@ const Team = () => {
       </section>
 
       <RexifiFooter />
-      
     </>
   );
 };
