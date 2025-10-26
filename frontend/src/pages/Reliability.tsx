@@ -55,14 +55,12 @@ interface ProgressGaugeProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+type ReliabilityMetricsKey = 'uptime' | 'latency' | 'packetLoss' | 'incidents';
+
 const ReliabilityPage = () => {
-  const [activeMetric, setActiveMetric] = useState<keyof ReliabilityMetrics>('uptime');
+  const [activeMetric, setActiveMetric] = useState<ReliabilityMetricsKey>('uptime');
   const [currentUptime, setCurrentUptime] = useState(99.98);
   const [isLiveData, setIsLiveData] = useState(true);
-
-  // Removed unused state variables
-  // const [networkStatus, setNetworkStatus] = useState('optimal');
-  // const [incidents, setIncidents] = useState([]);
 
   const colorMap: ColorMap = {
     blue: {
@@ -99,7 +97,7 @@ const ReliabilityPage = () => {
     }
   };
 
-  const reliabilityMetrics: Record<string, ReliabilityMetric> = {
+  const reliabilityMetrics: Record<ReliabilityMetricsKey, ReliabilityMetric> = {
     uptime: {
       value: 99.98,
       target: 99.9,
@@ -249,7 +247,7 @@ const ReliabilityPage = () => {
     return (
       <motion.div
         variants={gaugeVariants}
-        className={`relative ${sizes[size as keyof typeof sizes]} mx-auto`}
+        className={`relative ${sizes[size]} mx-auto`}
       >
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-700" />
@@ -363,52 +361,55 @@ const ReliabilityPage = () => {
 
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {Object.entries(reliabilityMetrics).map(([key, metric]) => (
-              <motion.div
-                  key={key}
-                  variants={itemVariants}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => setActiveMetric(key as keyof ReliabilityMetrics)}
-                  className={`p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
-                  activeMetric === key 
-                      ? `${colorMap[metric.color].border} shadow-2xl` 
-                      : 'border-gray-700 hover:border-gray-600'
-                  }`}
-              >
-                  <div className="flex items-center justify-between mb-4">
-                  <div className={`p-3 rounded-xl ${colorMap[metric.color].bg}`}>
-                      <div className={colorMap[metric.color].text}>
-                      {metric.icon}
-                      </div>
-                  </div>
+              {(Object.keys(reliabilityMetrics) as ReliabilityMetricsKey[]).map((key) => {
+                const metric = reliabilityMetrics[key];
+                return (
                   <motion.div
-                      animate={metric.trend === 'up' ? { y: [0, -2, 0] } : { y: [0, 2, 0] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className={`text-sm font-semibold ${
-                      metric.trend === 'up' ? 'text-green-400' : 'text-blue-400'
-                      }`}
+                    key={key}
+                    variants={itemVariants}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => setActiveMetric(key)}
+                    className={`p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
+                      activeMetric === key 
+                        ? `${colorMap[metric.color].border} shadow-2xl` 
+                        : 'border-gray-700 hover:border-gray-600'
+                    }`}
                   >
-                      {metric.trend === 'up' ? '↗' : '↘'}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`p-3 rounded-xl ${colorMap[metric.color].bg}`}>
+                        <div className={colorMap[metric.color].text}>
+                          {metric.icon}
+                        </div>
+                      </div>
+                      <motion.div
+                        animate={metric.trend === 'up' ? { y: [0, -2, 0] } : { y: [0, 2, 0] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                        className={`text-sm font-semibold ${
+                          metric.trend === 'up' ? 'text-green-400' : 'text-blue-400'
+                        }`}
+                      >
+                        {metric.trend === 'up' ? '↗' : '↘'}
+                      </motion.div>
+                    </div>
+                    
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {metric.value}
+                      {metric.unit}
+                    </div>
+                    <div className="text-gray-400 text-sm mb-2">{metric.description}</div>
+                    
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-500">Target: {metric.target}{metric.unit}</span>
+                      <span className={`${
+                        metric.value >= metric.target ? 'text-green-400' : 'text-orange-400'
+                      }`}>
+                        {metric.value >= metric.target ? '✓ Exceeded' : '✓ Met'}
+                      </span>
+                    </div>
                   </motion.div>
-                  </div>
-                  
-                  <div className="text-3xl font-bold text-white mb-1">
-                  {metric.value}
-                  {metric.unit}
-                  </div>
-                  <div className="text-gray-400 text-sm mb-2">{metric.description}</div>
-                  
-                  <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500">Target: {metric.target}{metric.unit}</span>
-                  <span className={`${
-                      metric.value >= metric.target ? 'text-green-400' : 'text-orange-400'
-                  }`}>
-                      {metric.value >= metric.target ? '✓ Exceeded' : '✓ Met'}
-                  </span>
-                  </div>
-              </motion.div>
-              ))}
+                );
+              })}
           </div>
 
           {/* Detailed Metric View */}
@@ -493,7 +494,7 @@ const ReliabilityPage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {networkInfrastructure.map((component, index) => (
+              {networkInfrastructure.map((component) => (
               <motion.div
                   key={component.component}
                   variants={itemVariants}
@@ -560,7 +561,7 @@ const ReliabilityPage = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              {serviceLevels.map((service, index) => (
+              {serviceLevels.map((service) => (
               <motion.div
                   key={service.plan}
                   variants={itemVariants}
