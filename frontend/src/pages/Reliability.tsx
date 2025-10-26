@@ -1,19 +1,70 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiServer, FiZap, FiShield, FiActivity, FiTrendingUp, FiClock, FiBarChart2, FiAward, FiUsers, FiGlobe, FiCheck, FiPlay, FiRefreshCw } from 'react-icons/fi';
+import { FiServer, FiZap, FiShield, FiActivity, FiBarChart2, FiAward, FiUsers, FiGlobe, FiRefreshCw } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+// Define TypeScript interfaces
+interface ColorConfig {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  gradient: string;
+  solid: string;
+}
 
+interface ColorMap {
+  blue: ColorConfig;
+  purple: ColorConfig;
+  green: ColorConfig;
+  orange: ColorConfig;
+}
+
+interface ReliabilityMetric {
+  value: number;
+  target: number;
+  trend: 'up' | 'down';
+  icon: React.ReactElement;
+  color: keyof ColorMap;
+  description: string;
+  unit: string;
+}
+
+interface NetworkComponent {
+  component: string;
+  status: string;
+  capacity: string;
+  redundancy: string;
+  icon: React.ReactElement;
+  color: keyof ColorMap;
+}
+
+interface ServiceLevel {
+  plan: string;
+  uptime: string;
+  support: string;
+  response: string;
+  color: keyof ColorMap;
+}
+
+interface ProgressGaugeProps {
+  value: number;
+  max?: number;
+  color: keyof ColorMap;
+  size?: 'sm' | 'md' | 'lg';
+}
 
 const ReliabilityPage = () => {
-  const [activeMetric, setActiveMetric] = useState('uptime');
+  const [activeMetric, setActiveMetric] = useState<keyof ReliabilityMetrics>('uptime');
   const [currentUptime, setCurrentUptime] = useState(99.98);
-  const [networkStatus, setNetworkStatus] = useState('optimal');
-  const [incidents, setIncidents] = useState([]);
   const [isLiveData, setIsLiveData] = useState(true);
 
-  const colorMap = {
+  // Removed unused state variables
+  // const [networkStatus, setNetworkStatus] = useState('optimal');
+  // const [incidents, setIncidents] = useState([]);
+
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -48,7 +99,7 @@ const ReliabilityPage = () => {
     }
   };
 
-  const reliabilityMetrics = {
+  const reliabilityMetrics: Record<string, ReliabilityMetric> = {
     uptime: {
       value: 99.98,
       target: 99.9,
@@ -87,7 +138,7 @@ const ReliabilityPage = () => {
     }
   };
 
-  const networkInfrastructure = [
+  const networkInfrastructure: NetworkComponent[] = [
     {
       component: 'Fiber Backbone',
       status: 'optimal',
@@ -122,7 +173,7 @@ const ReliabilityPage = () => {
     }
   ];
 
-  const serviceLevels = [
+  const serviceLevels: ServiceLevel[] = [
     {
       plan: 'Residential',
       uptime: '99.9%',
@@ -175,10 +226,6 @@ const ReliabilityPage = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
     }
   };
 
@@ -191,7 +238,7 @@ const ReliabilityPage = () => {
     }
   };
 
-  const ProgressGauge = ({ value, max = 100, color = 'blue', size = 'lg' }) => {
+  const ProgressGauge = ({ value, max = 100, color, size = 'lg' }: ProgressGaugeProps) => {
     const percentage = (value / max) * 100;
     const sizes = {
       sm: 'w-16 h-16',
@@ -202,7 +249,7 @@ const ReliabilityPage = () => {
     return (
       <motion.div
         variants={gaugeVariants}
-        className={`relative ${sizes[size]} mx-auto`}
+        className={`relative ${sizes[size as keyof typeof sizes]} mx-auto`}
       >
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-700" />
@@ -224,9 +271,7 @@ const ReliabilityPage = () => {
   };
 
   return (
-
     <>
-
       <Navbar />
       
       <div className="min-h-screen bg-gray-950">
@@ -300,10 +345,18 @@ const ReliabilityPage = () => {
               variants={containerVariants}
               className="text-center mb-12"
           >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
               Reliability <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Metrics</span>
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-400 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-400 max-w-2xl mx-auto"
+              >
               Real-time monitoring of our network performance and service quality
               </motion.p>
           </motion.div>
@@ -314,8 +367,9 @@ const ReliabilityPage = () => {
               <motion.div
                   key={key}
                   variants={itemVariants}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                   whileHover={{ scale: 1.05 }}
-                  onClick={() => setActiveMetric(key)}
+                  onClick={() => setActiveMetric(key as keyof ReliabilityMetrics)}
                   className={`p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
                   activeMetric === key 
                       ? `${colorMap[metric.color].border} shadow-2xl` 
@@ -422,10 +476,18 @@ const ReliabilityPage = () => {
               variants={containerVariants}
               className="text-center mb-12"
           >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
               Robust <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Infrastructure</span>
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-400 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-400 max-w-2xl mx-auto"
+              >
               Built with redundancy and scalability to ensure uninterrupted service
               </motion.p>
           </motion.div>
@@ -435,7 +497,7 @@ const ReliabilityPage = () => {
               <motion.div
                   key={component.component}
                   variants={itemVariants}
-                  whileHover="hover"
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                   className="group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700/50 hover:border-gray-600/50 transition-all duration-300"
               >
                   <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${colorMap[component.color].bg} mb-4`}>
@@ -481,10 +543,18 @@ const ReliabilityPage = () => {
               variants={containerVariants}
               className="text-center mb-12"
           >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
               Service Level <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Guarantees</span>
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-400 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-xl text-gray-400 max-w-2xl mx-auto"
+              >
               Our commitment to reliability backed by comprehensive service level agreements
               </motion.p>
           </motion.div>
@@ -494,6 +564,7 @@ const ReliabilityPage = () => {
               <motion.div
                   key={service.plan}
                   variants={itemVariants}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                   whileHover={{ scale: 1.02 }}
                   className={`p-8 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${colorMap[service.color].border}`}
               >
@@ -555,9 +626,7 @@ const ReliabilityPage = () => {
       </div>
 
       <RexifiFooter />
-
     </>
-
   );
 };
 
