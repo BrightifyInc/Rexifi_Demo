@@ -17,7 +17,6 @@ import Career from "./pages/Career";
 import OurStory from "./pages/OurStory";
 import GetFreeSurvey from "./pages/GetFreeSurvey";
 
-import Support1 from "./pages/Support1";
 import Team from "./pages/Team";
 
 import Billing from "./backend/Billing";
@@ -63,7 +62,6 @@ function App() {
           <Route path="/services" element={<Services />}></Route>
           <Route path="/pricing" element={<Pricing />}></Route>
           <Route path="/testimonials" element={<Testimonials />}></Route>
-          <Route path="/free" element={<Support1 />}></Route>
           <Route path="/free-survey" element={<GetFreeSurvey />}></Route>
           <Route path="/ads" element={<LandingPage />}></Route>
         </Routes>
