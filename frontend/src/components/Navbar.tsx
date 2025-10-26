@@ -1,25 +1,43 @@
-
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, createContext, useContext } from "react";
 import { Link } from 'react-router-dom';
-import { Stars } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { FiArrowRight, FiChevronDown, FiArrowUpRight, FiSun, FiMoon } from "react-icons/fi";
-import {
-  useMotionTemplate,
-  useMotionValue,
-  motion,
-  animate,
-  useTransform,
-  useScroll
-} from "framer-motion";
+import { FiChevronDown, FiSun, FiMoon } from "react-icons/fi";
+// import { motion } from "framer-motion";
 
 import logo from "../assets/img/logo.png";
 
-// Theme context for managing dark/light mode
-const ThemeContext = React.createContext();
+// Define types for theme context
+interface ThemeContextType {
+  theme: string;
+  toggleTheme: () => void;
+}
 
-const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
+interface ThemeProviderProps {
+  children: React.ReactNode;
+}
+
+interface DropdownItem {
+  label: string;
+  path: string;
+}
+
+interface DropdownMenuProps {
+  title: string;
+  items: DropdownItem[];
+  isOpen: boolean;
+  isHovering: boolean;
+  onToggle: () => void;
+  onHover: () => void;
+  onLeave: () => void;
+  onContainerLeave: () => void;
+  setIsMenuOpen: (isOpen: boolean) => void;
+  theme: string;
+}
+
+// Theme context for managing dark/light mode
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [theme, setTheme] = useState<string>(() => {
     // Check localStorage or system preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) return savedTheme;
@@ -42,20 +60,20 @@ const ThemeProvider = ({ children }) => {
   );
 };
 
-const useTheme = () => {
-  const context = React.useContext(ThemeContext);
+const useTheme = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 };
 
-const Header = () => {
+const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(null);
-  const [isHovering, setIsHovering] = useState(null);
-  const dropdownRef = useRef(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isHovering, setIsHovering] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -70,8 +88,8 @@ const Header = () => {
       setIsScrolled(window.scrollY > 10);
     };
 
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpenDropdown(null);
       }
     };
@@ -93,13 +111,13 @@ const Header = () => {
     setIsHovering(null);
   };
 
-  const toggleDropdown = (dropdownName) => {
+  const toggleDropdown = (dropdownName: string) => {
     if (window.innerWidth < 1024) {
       setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
     }
   };
 
-  const handleDropdownHover = (dropdownName) => {
+  const handleDropdownHover = (dropdownName: string) => {
     if (window.innerWidth >= 1024) {
       setIsHovering(dropdownName);
       setOpenDropdown(dropdownName);
@@ -124,7 +142,7 @@ const Header = () => {
     }
   };
 
-  const dropdownItems = {
+  const dropdownItems: Record<string, DropdownItem[]> = {
     home: [
       { label: "Overview", path: "/" },
       { label: "Services", path: "/services" },
@@ -306,7 +324,7 @@ const Header = () => {
   );
 };
 
-const DropdownMenu = ({ 
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ 
   title, 
   items, 
   isOpen, 
@@ -316,7 +334,7 @@ const DropdownMenu = ({
   onLeave, 
   onContainerLeave,
   setIsMenuOpen,
-  theme 
+  // theme 
 }) => {
   const handleLinkClick = () => {
     if (setIsMenuOpen && window.innerWidth < 1024) {
@@ -362,7 +380,7 @@ const DropdownMenu = ({
   );
 };
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   return (
     <ThemeProvider>
       <div className="relative">
@@ -375,6 +393,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
-
-
+export default Navbar;

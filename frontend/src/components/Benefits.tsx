@@ -1,11 +1,45 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiZap, FiWifi, FiShield, FiArrowRight, FiCheck, FiPlay, FiStar, FiGlobe, FiClock, FiUsers } from 'react-icons/fi';
+
+// Define TypeScript interfaces
+interface ColorConfig {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  gradient: string;
+  solid: string;
+}
+
+interface ColorMap {
+  blue: ColorConfig;
+  purple: ColorConfig;
+  green: ColorConfig;
+  orange: ColorConfig;
+}
+
+interface Benefit {
+  id: number;
+  title: string;
+  description: string;
+  features: string[];
+  icon: React.ReactElement;
+  color: keyof ColorMap;
+  image: string;
+  stats: Record<string, string>;
+}
+
+interface StatItem {
+  number: string;
+  label: string;
+  icon: React.ReactElement;
+}
 
 const BenefitsSection = () => {
   const [activeBenefit, setActiveBenefit] = useState(0);
 
-  const benefits = [
+  const benefits: Benefit[] = [
     {
       id: 1,
       title: "Lightning-Fast Fiber & Wireless Broadband",
@@ -38,7 +72,7 @@ const BenefitsSection = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -88,19 +122,18 @@ const BenefitsSection = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
     }
   };
 
-  const cardHoverVariants = {
-    rest: { scale: 1, y: 0 },
-    hover: { scale: 1.02, y: -5 }
-  };
+  // Removed unused cardHoverVariants since it's not being used
 
   const currentBenefit = benefits[activeBenefit];
+
+  const stats: StatItem[] = [
+    { number: "50K+", label: "Happy Customers", icon: <FiUsers /> },
+    { number: "99.9%", label: "Uptime", icon: <FiClock /> },
+    { number: "50+", label: "Cities", icon: <FiGlobe /> }
+  ];
 
   return (
     <section className="relative bg-gray-900 py-14 md:py-28 overflow-hidden">
@@ -121,12 +154,14 @@ const BenefitsSection = () => {
         >
           <motion.h2
             variants={itemVariants}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="max-w-lg mx-auto mb-3 font-bold text-center text-white text-3xl md:text-5xl"
           >
             Why Choose Rexifi Internet?
           </motion.h2>
           <motion.p
             variants={itemVariants}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="max-w-2xl mx-auto text-base font-normal leading-6 text-white/50 text-lg"
           >
             Experience the future of connectivity with Africa's most reliable and advanced internet service provider. 
@@ -144,6 +179,7 @@ const BenefitsSection = () => {
               <motion.button
                 key={benefit.id}
                 variants={itemVariants}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveBenefit(index)}
@@ -292,14 +328,14 @@ const BenefitsSection = () => {
               className="lg:col-span-5"
             >
               <div className="space-y-6 h-full">
-                {benefits.map((benefit, index) => (
+                {benefits.map((benefit) => (
                   <motion.div
                     key={benefit.id}
                     variants={itemVariants}
-                    whileHover="hover"
-                    onClick={() => setActiveBenefit(index)}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    onClick={() => setActiveBenefit(benefits.findIndex(b => b.id === benefit.id))}
                     className={`group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
-                      activeBenefit === index 
+                      activeBenefit === benefits.findIndex(b => b.id === benefit.id)
                         ? `${colorMap[benefit.color].border} shadow-2xl scale-105` 
                         : 'border-gray-700 hover:border-gray-600'
                     }`}
@@ -335,6 +371,7 @@ const BenefitsSection = () => {
             {/* Full Width Bottom CTA */}
             <motion.div
               variants={itemVariants}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="lg:col-span-12"
             >
               <div className="relative bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-3xl p-8 md:p-12 overflow-hidden border-2 border-green-500/20">
@@ -364,13 +401,9 @@ const BenefitsSection = () => {
                   </div>
                   
                   <div className="flex gap-6 text-center">
-                    {[
-                      { number: "50K+", label: "Happy Customers", icon: <FiUsers /> },
-                      { number: "99.9%", label: "Uptime", icon: <FiClock /> },
-                      { number: "50+", label: "Cities", icon: <FiGlobe /> }
-                    ].map((stat, index) => (
+                    {stats.map((stat, index) => (
                       <motion.div
-                        key={index}
+                        key={stat.label}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.2 }}

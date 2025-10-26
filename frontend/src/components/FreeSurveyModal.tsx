@@ -1,11 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiX, FiMapPin, FiHome, FiCalendar, FiClock, FiCheck, FiUser, FiPhone, FiMail, FiArrowRight, FiPlus, FiInfo } from 'react-icons/fi';
+import { FiX, FiMapPin, FiCheck, FiUser, FiArrowRight, FiPlus, FiInfo } from 'react-icons/fi';
 
-const FreeSurveyModal = ({ isOpen, onClose }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+// Define types for the component props
+interface FreeSurveyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// Define the form data type
+interface FormData {
+  fullName: string;
+  phone: string;
+  email: string;
+  address: string;
+  propertyType: string;
+  preferredDate: string;
+  preferredTime: string;
+  specialRequirements: string;
+  internetUsage: string;
+  currentProvider: string;
+  numberOfDevices: string;
+}
+
+// Define errors type
+interface FormErrors {
+  fullName?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  propertyType?: string;
+  [key: string]: string | undefined;
+}
+
+const FreeSurveyModal = ({ isOpen, onClose }: FreeSurveyModalProps) => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: '',
     phone: '',
     email: '',
@@ -19,7 +49,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
     numberOfDevices: ''
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const propertyTypes = [
     { value: 'residential', label: 'Residential Home', icon: '🏠' },
@@ -27,14 +57,6 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
     { value: 'office', label: 'Office Building', icon: '🏢' },
     { value: 'commercial', label: 'Commercial Space', icon: '🏪' },
     { value: 'industrial', label: 'Industrial', icon: '🏭' }
-  ];
-
-  const timeSlots = [
-    '9:00 AM - 11:00 AM',
-    '11:00 AM - 1:00 PM',
-    '1:00 PM - 3:00 PM',
-    '3:00 PM - 5:00 PM',
-    '5:00 PM - 7:00 PM'
   ];
 
   const internetUsageOptions = [
@@ -58,7 +80,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
 
   // Validation function
   const validateFields = () => {
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     
     if (!formData.fullName) newErrors.fullName = 'Full name is required';
     if (!formData.phone) newErrors.phone = 'Phone number is required';
@@ -77,7 +99,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
@@ -91,7 +113,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateFields()) {
@@ -142,7 +164,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
       scale: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 25,
         stiffness: 300
       }
@@ -161,7 +183,7 @@ const FreeSurveyModal = ({ isOpen, onClose }) => {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMail, 
@@ -20,6 +20,19 @@ import { Link } from 'react-router-dom';
 
 import logo from "../assets/img/logo.png";
 
+// Define types for the points
+interface PointData {
+  idx: number;
+  position: [number, number, number];
+  color: string;
+}
+
+// Define props for Point component
+interface PointProps {
+  position: [number, number, number];
+  color: string;
+}
+
 const ParticleRing = () => {
   return (
     <div className="relative w-full h-full">
@@ -39,25 +52,27 @@ const ParticleRing = () => {
 };
 
 const PointCircle = () => {
-  const ref = useRef(null);
+  const ref = useRef<THREE.Group>(null);
+  
   useFrame(({ clock }) => {
     if (ref.current?.rotation) {
       ref.current.rotation.z = clock.getElapsedTime() * 0.05;
     }
   });
+  
   return (
     <group ref={ref}>
-      {pointsInner.map((point) => (
+      {pointsInner.map((point: PointData) => (
         <Point key={point.idx} position={point.position} color={point.color} />
       ))}
-      {pointsOuter.map((point) => (
+      {pointsOuter.map((point: PointData) => (
         <Point key={point.idx} position={point.position} color={point.color} />
       ))}
     </group>
   );
 };
 
-const Point = ({ position, color }) => {
+const Point = ({ position, color }: PointProps) => {
   return (
     <Sphere position={position} args={[0.1, 10, 10]}>
       <meshStandardMaterial
@@ -71,7 +86,6 @@ const Point = ({ position, color }) => {
 };
 
 const RexifiFooter = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
@@ -79,7 +93,7 @@ const RexifiFooter = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setIsSubscribed(true);
@@ -113,7 +127,6 @@ const RexifiFooter = () => {
   ];
 
   return (
-    // <footer className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 overflow-hidden">
     <footer className="relative bg-slate-900 overflow-hidden">
       {/* Particle Ring Background */}
       <div className="absolute inset-0 opacity-20">
@@ -309,7 +322,7 @@ const RexifiFooter = () => {
           className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <div className="text-gray-400 text-sm">
-            © 2024 Rexifi Internet Services. All rights reserved.
+            © 2025 Rexifi Internet Services. All rights reserved.
           </div>
           
           <div className="flex gap-6 text-sm text-gray-400">

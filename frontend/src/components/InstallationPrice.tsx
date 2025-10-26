@@ -1,13 +1,35 @@
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiWifi, FiZap, FiServer, FiGlobe, FiCheck, FiArrowRight, FiInfo, FiTool, FiClock, FiUsers, FiShield } from 'react-icons/fi';
+
+// Define types
+interface Plan {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  icon: JSX.Element;
+  color: 'blue' | 'purple' | 'green' | 'orange';
+  features: string[];
+  installationTime: string;
+  bestFor: string[];
+  popular: boolean;
+}
+
+interface ColorMap {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  gradient: string;
+  solid: string;
+}
 
 const InstallationFeesSection = () => {
   const [selectedPlan, setSelectedPlan] = useState('fiber');
   const [showContactForm, setShowContactForm] = useState(false);
 
-  const installationPlans = [
+  const installationPlans: Plan[] = [
     {
       id: 'fiber',
       name: 'Fiber Optic Installation',
@@ -86,7 +108,7 @@ const InstallationFeesSection = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: Record<'blue' | 'purple' | 'green' | 'orange', ColorMap> = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -140,14 +162,32 @@ const InstallationFeesSection = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
 
+  // Handle tab change
+  const handleTabChange = (planId: string) => {
+    setSelectedPlan(planId);
+  };
+
+  // Handle form submission
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log('Form submitted');
+    setShowContactForm(false);
+  };
+
+  // Add null check for currentPlan
+  if (!currentPlan) {
+    return null;
+  }
+
   return (
     <section className="py-14 md:py-28 bg-gray-900 relative overflow-hidden">
-      {/* Animated Background Elements - Same as Benefits Section */}
+      {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/5 rounded-full filter blur-3xl animate-pulse"></div>
         <div className="absolute bottom-0 right-0 w-72 h-72 bg-purple-500/5 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
@@ -191,7 +231,7 @@ const InstallationFeesSection = () => {
                 variants={itemVariants}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedPlan(plan.id)}
+                onClick={() => handleTabChange(plan.id)}
                 className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-300 ${
                   selectedPlan === plan.id
                     ? `${colorMap[plan.color].solid} text-white shadow-2xl`
@@ -349,7 +389,7 @@ const InstallationFeesSection = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => currentPlan.id === 'starlink' ? setShowContactForm(true) : console.log('Schedule installation')}
+                    onClick={() => currentPlan.id === 'starlink' ? setShowContactForm(true) : console.log('Schedule installation for:', currentPlan.name)}
                     className={`relative z-10 w-full ${colorMap[currentPlan.color].solid} text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3`}
                   >
                     {currentPlan.id === 'starlink' ? (
@@ -428,40 +468,32 @@ const InstallationFeesSection = () => {
                   </div>
                 </motion.div>
 
-                {/* Support Info */}
-                {/* <motion.div
-                  variants={itemVariants}
-                  className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white"
-                >
-                  <h4 className="font-semibold mb-2">Need Help Choosing?</h4>
-                  <p className="text-blue-100 mb-4 text-sm">
-                    Our experts can recommend the best installation type for your specific needs.
-                  </p>
-                  <button 
-                    onClick={() => setShowContactForm(true)}
-                    className="w-full bg-white text-blue-600 px-4 py-2 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
-                  >
-                    Consult Our Experts
-                  </button>
-                </motion.div> */}
               </div>
             </motion.div>
           </div>
+
+          {/* Help Section */}
           <motion.div
-              variants={itemVariants}
-              className="bg-gradient-to-br from-green-500/30 to-orange-600/50 mt-16 rounded-2xl p-6 text-white"
+            variants={itemVariants}
+            className="bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-3xl p-8 overflow-hidden border-2 border-green-500/20 mt-8 relative"
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full filter blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 rounded-full filter blur-3xl"></div>
+            </div>
+
+            <h3 className="font-bold text-white text-2xl md:text-4xl mb-4 text-center relative z-10">Need Help Choosing?</h3>
+            <p className="text-blue-100 mb-4 text-sm text-center relative z-10">
+              Our experts can recommend the best installation type for your specific needs.
+            </p>
+            <button 
+              onClick={() => setShowContactForm(true)}
+              className="w-full bg-gradient-to-r from-orange-400 to-orange-600 text-white text-center px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 relative z-10"
             >
-              <h3 className="font-semibold mb-2 text-center">Need Help Choosing?</h3>
-              <p className="text-blue-100 mb-4 text-sm text-center">
-                Our experts can recommend the best installation type for your specific needs.
-              </p>
-              <button 
-                onClick={() => setShowContactForm(true)}
-                className="w-full bg-white text-orange-600 px-4 py-2 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
-              >
-                Consult Our Experts
-              </button>
-            </motion.div>
+              Consult Our Experts
+            </button>
+          </motion.div>
         </div>
       </div>
 
@@ -489,18 +521,25 @@ const InstallationFeesSection = () => {
                 Our team will contact you within 24 hours to discuss your installation needs.
               </p>
               
-              <form className="space-y-4">
+              <form onSubmit={handleFormSubmit} className="space-y-4">
                 <input
                   type="text"
                   placeholder="Full Name"
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                  required
                 />
                 <input
                   type="tel"
                   placeholder="Phone Number"
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                  required
                 />
-                <select className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-blue-500">
+                <select 
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-blue-500"
+                  value={selectedPlan}
+                  onChange={(e) => setSelectedPlan(e.target.value)}
+                  required
+                >
                   <option value="">Select Installation Type</option>
                   {installationPlans.map(plan => (
                     <option key={plan.id} value={plan.id}>{plan.name}</option>

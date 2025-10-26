@@ -1,10 +1,56 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useInView, useSpring, useTransform } from 'framer-motion';
-import { FiWifi, FiHome, FiBriefcase, FiGift, FiAward, FiUsers, FiGlobe, FiStar, FiArrowRight, FiChevronDown, FiArrowUpRight} from "react-icons/fi";
+import { FiAward, FiUsers, FiGlobe, FiStar, FiArrowRight } from "react-icons/fi";
 
+// Define types
+interface Service {
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  color: 'blue' | 'purple' | 'green' | 'orange';
+  link: string;
+}
+
+interface ColorMap {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  solid?: string;
+}
+
+interface InternetPlan {
+  speed: string;
+  price: string;
+  popular: boolean;
+  description?: string;
+}
+
+interface InternetPlans {
+  [key: string]: {
+    color: string;
+    plans: InternetPlan[];
+  };
+}
+
+interface CountUpProps {
+  value: number;
+  duration?: number;
+  delay?: number;
+}
+
+interface AnimatedStatProps {
+  icon: React.ComponentType<{ className?: string }>;
+  value: number;
+  suffix?: string;
+  label: string;
+  color: 'blue' | 'green' | 'purple' | 'yellow';
+  delay?: number;
+  duration?: number;
+}
 
 const ServicesSection = () => {
-  const services = [
+  const services: Service[] = [
     {
       title: "Fiber and Radio Broadband",
       description: "Our service is completely independent of national telcos. Our fiber optic backbone and access networks ensure your data is secured with enterprise-grade encryption and reliability.",
@@ -40,38 +86,40 @@ const ServicesSection = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: Record<'blue' | 'purple' | 'green' | 'orange', ColorMap> = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
       border: "border-blue-500/20",
-      hover: "hover:border-blue-400"
+      hover: "hover:border-blue-400",
+      solid: "bg-blue-500"
     },
     purple: {
       bg: "bg-purple-500/10",
       text: "text-purple-400",
       border: "border-purple-500/20",
-      hover: "hover:border-purple-400"
+      hover: "hover:border-purple-400",
+      solid: "bg-purple-500"
     },
     green: {
       bg: "bg-green-500/10",
       text: "text-green-400",
       border: "border-green-500/20",
-      hover: "hover:border-green-400"
+      hover: "hover:border-green-400",
+      solid: "bg-green-500"
     },
     orange: {
       bg: "bg-orange-500/10",
       text: "text-orange-400",
       border: "border-orange-500/20",
-      hover: "hover:border-orange-400"
+      hover: "hover:border-orange-400",
+      solid: "bg-orange-500"
     }
   };
-  
 
   const [activePlanTab, setActivePlanTab] = useState('free');
   
-  
-  const internetPlans = {
+  const internetPlans: InternetPlans = {
     fiber: {
       color: 'blue',
       plans: [
@@ -96,7 +144,6 @@ const ServicesSection = () => {
         { speed: '50 Mbps', price: '45,000', popular: false },
         { speed: '100 Mbps', price: '75,000', popular: true },
         { speed: '200 Mbps', price: '120,000', popular: false },
-        // { speed: '500 Mbps', price: '250,000', popular: false }
       ]
     },
     free: {
@@ -110,9 +157,7 @@ const ServicesSection = () => {
   };
 
   return (
-
-    <>
-    
+    <>    
       <section className="relative py-24 bg-gray-950 overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 opacity-10">
@@ -181,7 +226,7 @@ const ServicesSection = () => {
                 </div>
 
                 {/* Hover effect */}
-                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent to-${service.color}-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent via-${service.color}-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
               </motion.div>
             ))}
           </div>
@@ -204,258 +249,202 @@ const ServicesSection = () => {
       </section>
 
       {/* Internet Plans Section */}
-      {/* <section className="py-14 md:py-28 bg-gray-50 dark:bg-gray-950"> */}
-        <section className="relative bg-gray-950 overflow-hidden">
-          <div className="max-w-2xl mx-auto mb-12 text-center">
-            <h2 className="max-w-2xl mx-auto bg-gradient-to-br from-white to-gray-400 bg-clip-text text-3xl font-medium leading-tight text-transparent sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
-              High-Speed Internet Plans
-            </h2>
-            <p className="my-6 max-w-2xl mx-auto text-center text-gray-400 text-base leading-relaxed md:text-lg md:leading-relaxed">
-              Choose the perfect internet plan for your needs with our reliable 
-              and affordable connectivity solutions
-            </p>
-          </div>
+      <section className="relative bg-gray-950 overflow-hidden">
+        <div className="max-w-2xl mx-auto mb-12 text-center">
+          <h2 className="max-w-2xl mx-auto bg-gradient-to-br from-white to-gray-400 bg-clip-text text-3xl font-medium leading-tight text-transparent sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
+            High-Speed Internet Plans
+          </h2>
+          <p className="my-6 max-w-2xl mx-auto text-center text-gray-400 text-base leading-relaxed md:text-lg md:leading-relaxed">
+            Choose the perfect internet plan for your needs with our reliable 
+            and affordable connectivity solutions
+          </p>
+        </div>
 
-          <div className="relative container mx-auto px-4">
-            <div>
-              {/* Tab Navigation */}
-              {/* <div className="flex flex-wrap sm:justify-center mx-auto gap-2 p-1 w-full mb-8 dark:bg-white/[0.05] bg-gray-100 rounded-2xl lg:rounded-full max-w-fit">
-                <button
-                  onClick={() => setActivePlanTab('fiber')}
-                  className={`flex items-center h-12 gap-2 px-4 py-3 text-sm font-medium transition-colors duration-200 rounded-full ${
-                    activePlanTab === 'fiber' 
-                      ? 'bg-white dark:text-white/90 dark:bg-white/10 text-gray-800' 
-                      : 'text-gray-500 dark:text-gray-400 bg-transparent'
+        <div className="relative container mx-auto px-4">
+          <div>
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              {Object.entries(internetPlans).map(([key, plan]) => (
+                <motion.button
+                  key={key}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActivePlanTab(key)}
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                    activePlanTab === key
+                      ? `${colorMap[plan.color as keyof typeof colorMap].solid} text-white shadow-lg`
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
-                  <FiWifi className="w-5 h-5" />
-                  Fiber Plans
-                </button>
+                  {key.charAt(0).toUpperCase() + key.slice(1)} Plans
+                </motion.button>
+              ))}
+            </div>
 
-                <button
-                  onClick={() => setActivePlanTab('wireless')}
-                  className={`flex items-center h-12 gap-2 px-4 py-3 text-sm font-medium transition-colors duration-200 rounded-full ${
-                    activePlanTab === 'wireless' 
-                      ? 'bg-white dark:text-white/90 dark:bg-white/10 text-gray-800' 
-                      : 'text-gray-500 dark:text-gray-400 bg-transparent'
-                  }`}
-                >
-                  <FiHome className="w-5 h-5" />
-                  Residential Wireless
-                </button>
-
-                <button
-                  onClick={() => setActivePlanTab('enterprise')}
-                  className={`flex items-center h-12 gap-2 px-4 py-3 text-sm font-medium transition-colors duration-200 rounded-full ${
-                    activePlanTab === 'enterprise' 
-                      ? 'bg-white dark:text-white/90 dark:bg-white/10 text-gray-800' 
-                      : 'text-gray-500 dark:text-gray-400 bg-transparent'
-                  }`}
-                >
-                  <FiBriefcase className="w-5 h-5" />
-                  Enterprise
-                </button>
-
-                <button
-                  onClick={() => setActivePlanTab('free')}
-                  className={`flex items-center h-12 gap-2 px-4 py-3 text-sm font-medium transition-colors duration-200 rounded-full ${
-                    activePlanTab === 'free' 
-                      ? 'bg-white dark:text-white/90 dark:bg-white/10 text-gray-800' 
-                      : 'text-gray-500 dark:text-gray-400 bg-transparent'
-                  }`}
-                >
-                  <FiGift className="w-5 h-5" />
-                  Free Offers
-                </button>
-              </div> */}
-
-              <div className="flex flex-wrap justify-center gap-4 mb-12">
-                {Object.entries(internetPlans).map(([key, plan]) => (
-                  <motion.button
-                    key={key}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActivePlanTab(key)}
-                    className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                      activePlanTab === key
-                        ? `${colorMap[plan.color].solid} text-white shadow-lg`
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                    }`}
+            {/* Plans Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {internetPlans[activePlanTab].plans.map((plan, index) => {
+                const colorConfig = colorMap[internetPlans[activePlanTab].color as keyof typeof colorMap];
+                // Create a solid background color from the border color
+                const solidBgColor = colorConfig.border
+                  .replace('500/20', '500')
+                  .replace('border-', 'bg-');
+                
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className={`group relative p-8 rounded-2xl bg-gray-900/50 backdrop-blur-sm border ${colorConfig.border} ${colorConfig.hover} transition-all duration-300 hover:scale-105`}
                   >
-                    {key.charAt(0).toUpperCase() + key.slice(1)} Plans
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Plans Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {internetPlans[activePlanTab].plans.map((plan, index) => {
-                  const colorConfig = colorMap[internetPlans[activePlanTab].color];
-                  // Create a solid background color from the border color
-                  const solidBgColor = colorConfig.border
-                    .replace('500/20', '500')
-                    .replace('border-', 'bg-');
-                  
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      className={`group relative p-8 rounded-2xl bg-gray-900/50 backdrop-blur-sm border ${colorConfig.border} ${colorConfig.hover} transition-all duration-300 hover:scale-105`}
-                    >
-                      {plan.popular && (
-                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                          <span className={`${solidBgColor} text-white text-xs px-3 py-1 rounded-full`}>
-                            Most Popular
+                    {plan.popular && (
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <span className={`${solidBgColor} text-white text-xs px-3 py-1 rounded-full`}>
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
+                    
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-white">
+                        {plan.speed}
+                      </h3>
+                      <div className="flex items-baseline justify-center mt-4">
+                        <span className="text-3xl font-bold text-white">
+                          {plan.price}
+                        </span>
+                        {plan.price !== 'FREE' && (
+                          <span className="ml-1 text-sm text-gray-400">
+                            /month
                           </span>
-                        </div>
-                      )}
-                      
-                      <div className="text-center mb-6">
-                        <h3 className="text-2xl font-bold text-white">
-                          {plan.speed}
-                        </h3>
-                        <div className="flex items-baseline justify-center mt-4">
-                          <span className="text-3xl font-bold text-white">
-                            {plan.price}
-                          </span>
-                          {plan.price !== 'FREE' && (
-                            <span className="ml-1 text-sm text-gray-400">
-                              /month
-                            </span>
-                          )}
-                        </div>
-                        {plan.description && (
-                          <p className="text-sm text-gray-400 mt-2">
-                            {plan.description}
-                          </p>
                         )}
                       </div>
+                      {plan.description && (
+                        <p className="text-sm text-gray-400 mt-2">
+                          {plan.description}
+                        </p>
+                      )}
+                    </div>
 
-                      <ul className="space-y-3 mb-6">
-                        <li className="flex items-center">
-                          <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
-                          <span className="text-sm text-gray-300">
-                            High-speed internet
-                          </span>
-                        </li>
-                        <li className="flex items-center">
-                          <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
-                          <span className="text-sm text-gray-300">
-                            24/7 support
-                          </span>
-                        </li>
-                        <li className="flex items-center">
-                          <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
-                          <span className="text-sm text-gray-300">
-                            No data caps
-                          </span>
-                        </li>
-                        <li className="flex items-center">
-                          <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
-                          <span className="text-sm text-gray-300">
-                            Free installation
-                          </span>
-                        </li>
-                      </ul>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center">
+                        <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
+                        <span className="text-sm text-gray-300">
+                          High-speed internet
+                        </span>
+                      </li>
+                      <li className="flex items-center">
+                        <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
+                        <span className="text-sm text-gray-300">
+                          24/7 support
+                        </span>
+                      </li>
+                      <li className="flex items-center">
+                        <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
+                        <span className="text-sm text-gray-300">
+                          No data caps
+                        </span>
+                      </li>
+                      <li className="flex items-center">
+                        <FiStar className={`w-4 h-4 ${colorConfig.text} mr-2`} />
+                        <span className="text-sm text-gray-300">
+                          Free installation
+                        </span>
+                      </li>
+                    </ul>
 
-                      <button className={`w-full py-3 px-4 rounded-lg text-sm font-medium transition-colors ${
-                        plan.popular
-                          ? `${solidBgColor} text-white hover:${solidBgColor.replace('500', '600')}`
-                          : `${colorConfig.bg} ${colorConfig.text} hover:${colorConfig.bg.replace('10', '20')}`
-                      }`}>
-                        {plan.price === 'FREE' ? 'Get Started' : 'Subscribe Now'}
-                      </button>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                    <button className={`w-full py-3 px-4 rounded-lg text-sm font-medium transition-colors ${
+                      plan.popular
+                        ? `${solidBgColor} text-white hover:opacity-90`
+                        : `${colorConfig.bg} ${colorConfig.text} hover:opacity-90`
+                    }`}>
+                      {plan.price === 'FREE' ? 'Get Started' : 'Subscribe Now'}
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </div>
 
-              {/* Bottom Section */}
-              <div className="mt-12 text-center">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                  Need help choosing the right plan?
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Our experts are ready to help you find the perfect internet solution
-                </p>
-                <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
-                  Contact Sales
-                </button>
-              </div>
+            {/* Bottom Section */}
+            <div className="mt-12 text-center">
+              <h3 className="text-xl font-semibold text-white mb-4">
+                Need help choosing the right plan?
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Our experts are ready to help you find the perfect internet solution
+              </p>
+              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                Contact Sales
+              </button>
             </div>
           </div>
-        </section>
-      {/* </section> */}
-
+        </div>
+      </section>
     </>
   );
 };
 
+// CountUp Component with smooth animations
+const CountUp: React.FC<CountUpProps> = ({ value, duration = 2, delay = 0 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
+  const spring = useSpring(0, {
+    stiffness: 100,
+    damping: 30,
+  });
+  
+  const displayValue = useTransform(spring, (latest) => {
+    return Math.floor(latest);
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      spring.set(value);
+    }
+  }, [isInView, value, spring]);
+
+  return <motion.span ref={ref}>{displayValue}</motion.span>;
+};
+
+// AnimatedStat Component
+const AnimatedStat: React.FC<AnimatedStatProps> = ({ 
+  icon: Icon, 
+  value, 
+  suffix = "", 
+  label, 
+  color = "blue", 
+  delay = 0,
+  duration = 2 
+}) => {
+  const colorClasses = {
+    blue: { bg: "bg-blue-500/10", text: "text-blue-400" },
+    green: { bg: "bg-green-500/10", text: "text-green-400" },
+    purple: { bg: "bg-purple-500/10", text: "text-purple-400" },
+    yellow: { bg: "bg-yellow-500/10", text: "text-yellow-400" }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true }}
+      className="bg-gray-900/50 rounded-xl p-6 text-center border border-gray-800"
+    >
+      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${colorClasses[color].bg} mb-4`}>
+        <Icon className={`w-8 h-8 ${colorClasses[color].text}`} />
+      </div>
+      <h3 className="text-4xl font-bold text-white mb-2">
+        <CountUp value={value} duration={duration} delay={delay} />{suffix}
+      </h3>
+      <p className="text-gray-400">{label}</p>
+    </motion.div>
+  );
+};
 
 const About = () => {
-
-  // CountUp Component with smooth animations
-  const CountUp = ({ value, duration = 2, delay = 0 }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
-    
-    const spring = useSpring(0, {
-      duration: duration * 1000,
-      delay: delay * 1000,
-    });
-    
-    const displayValue = useTransform(spring, (latest) => {
-      return Math.floor(latest);
-    });
-
-    useEffect(() => {
-      if (isInView) {
-        spring.set(value);
-      }
-    }, [isInView, value, spring]);
-
-    return <motion.span ref={ref}>{displayValue}</motion.span>;
-  };
-
-  // AnimatedStat Component
-  const AnimatedStat = ({ 
-    icon: Icon, 
-    value, 
-    suffix = "", 
-    label, 
-    color = "blue", 
-    delay = 0,
-    duration = 2 
-  }) => {
-    const colorClasses = {
-      blue: { bg: "bg-blue-500/10", text: "text-blue-400" },
-      green: { bg: "bg-green-500/10", text: "text-green-400" },
-      purple: { bg: "bg-purple-500/10", text: "text-purple-400" },
-      yellow: { bg: "bg-yellow-500/10", text: "text-yellow-400" }
-    };
-
-    return (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay }}
-        viewport={{ once: true }}
-        className="bg-gray-900/50 rounded-xl p-6 text-center border border-gray-800"
-      >
-        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${colorClasses[color].bg} mb-4`}>
-          <Icon className={`w-8 h-8 ${colorClasses[color].text}`} />
-        </div>
-        <h3 className="text-4xl font-bold text-white mb-2">
-          <CountUp value={value} duration={duration} delay={delay} />{suffix}
-        </h3>
-        <p className="text-gray-400">{label}</p>
-      </motion.div>
-    );
-  };
-
   return (
     <>
       <section id="about" className="relative bg-gray-950 text-gray-200 py-24 px-4">
@@ -623,26 +612,12 @@ const About = () => {
         </div>
       </section>
     </>
-  )
-
-
-} 
-
+  );
+};
 
 const AboutUs = () => {
-  const [activeTab, setActiveTab] = useState('text');
-  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
-  const [annualBilling, setAnnualBilling] = useState(false);
-  const [activeFaqItem, setActiveFaqItem] = useState(null);
-  
-  const toggleFaqItem = (itemId) => {
-    setActiveFaqItem(activeFaqItem === itemId ? null : itemId);
-  };
-  
-  return (
-    
+  return (    
     <>
-
       <About />
       <ServicesSection />
 
@@ -669,9 +644,6 @@ const AboutUs = () => {
               viewport={{ once: true }}
               className="bg-gray-900/50 rounded-xl p-6 text-center border border-blue-500/20 hover:border-blue-400 flex flex-col items-center"
             >
-              {/* <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 mb-4">
-                <FiUsers className="w-8 h-8 text-blue-400" />
-              </div> */}
               <div className="core-feature-icon mb-9 inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -703,7 +675,6 @@ const AboutUs = () => {
                 Let our AI-powered service simplify your content creation
                 process. Start using AI today!
               </p>
-            {/* </div> */}
             </motion.div>
 
             <motion.div 
@@ -766,7 +737,6 @@ const AboutUs = () => {
                 Discover how AI can transform your ideas into captivating
                 content with our high-quality service.
               </p>
-            {/* </div> */}
             </motion.div>
             
             <motion.div 
@@ -801,7 +771,6 @@ const AboutUs = () => {
                 Effortlessly access AI-generated content for your blogs,
                 websites, and more with our high-quality, convenient service.
               </p>
-            {/* </div> */}
             </motion.div>
 
             <motion.div 
@@ -913,12 +882,9 @@ const AboutUs = () => {
                 audience. Give it a try now.
               </p>
             </motion.div>
-
           </div>
         </div>
       </section>
-      {/* <!-- Core Feature End --> */}
-      
     </>
   );
 };
