@@ -18,6 +18,7 @@ import OurStory from "./pages/OurStory";
 import GetFreeSurvey from "./pages/GetFreeSurvey";
 
 import Support1 from "./pages/Support1";
+import Team from "./pages/Team";
 
 import Billing from "./backend/Billing";
 import Settings from "./backend/Settings"
@@ -49,6 +50,7 @@ function App() {
           <Route path="/coverage" element={<CourageMap />}></Route>
           <Route path="/careers" element={<Career />}></Route>
           <Route path="/press" element={<Press />}></Route>
+          <Route path="/team" element={<Team />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/billing" element={<Billing />}></Route>
           <Route path="/settings" element={<Settings />}></Route>

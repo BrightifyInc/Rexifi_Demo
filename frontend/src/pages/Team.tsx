@@ -1,24 +1,51 @@
-// import React from 'react'
-
-// const Team = () => {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
-
-// export default Team
-
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiWifi, FiHome, FiBriefcase, FiGift, FiAward, FiUsers, FiGlobe, FiStar, FiArrowRight, FiChevronDown, FiArrowUpRight} from "react-icons/fi";
 
+// Define TypeScript interfaces
+interface ColorConfig {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+}
 
+interface ColorMap {
+  blue: ColorConfig;
+  purple: ColorConfig;
+  green: ColorConfig;
+  orange: ColorConfig;
+}
+
+interface Plan {
+  speed: string;
+  price: string;
+  popular: boolean;
+  description?: string;
+}
+
+interface InternetPlanCategory {
+  color: keyof ColorMap;
+  plans: Plan[];
+}
+
+interface InternetPlans {
+  fiber: InternetPlanCategory;
+  wireless: InternetPlanCategory;
+  enterprise: InternetPlanCategory;
+  free: InternetPlanCategory;
+}
+
+interface Service {
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  color: keyof ColorMap;
+  link: string;
+}
 
 const ServicesSection = () => {
-  const services = [
+  const services: Service[] = [
     {
       title: "Fiber and Radio Broadband",
       description: "Our service is completely independent of national telcos. Our fiber optic backbone and access networks ensure your data is secured with enterprise-grade encryption and reliability.",
@@ -54,7 +81,7 @@ const ServicesSection = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -81,9 +108,9 @@ const ServicesSection = () => {
     }
   };
 
-  const [activePlanTab, setActivePlanTab] = useState('fiber');
+  const [activePlanTab, setActivePlanTab] = useState<keyof InternetPlans>('fiber');
   
-   const internetPlans = {
+  const internetPlans: InternetPlans = {
     fiber: {
       color: 'blue',
       plans: [
@@ -122,9 +149,7 @@ const ServicesSection = () => {
   };
 
   return (
-
     <>
-    
         <section className="relative py-24 bg-gray-950 overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 opacity-10">
@@ -282,7 +307,7 @@ const ServicesSection = () => {
 
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {internetPlans[activePlanTab].plans.map((plan, index) => {
+                {internetPlans[activePlanTab].plans.map((plan: Plan, index: number) => {
                     const colorConfig = colorMap[internetPlans[activePlanTab].color];
                     // Create a solid background color from the border color
                     const solidBgColor = colorConfig.border
@@ -381,8 +406,6 @@ const ServicesSection = () => {
             </div>
             </div>
         </section>
-        {/* </section> */}
-
     </>
   );
 };
@@ -396,6 +419,3 @@ const Services = () => {
 }
 
 export default Services
-
-
-
