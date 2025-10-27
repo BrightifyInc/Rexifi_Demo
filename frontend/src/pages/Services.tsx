@@ -43,7 +43,7 @@ interface Service {
   title: string;
   description: string;
   features: string[];
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: keyof ColorMap;
   link: string;
   image: string;
@@ -79,7 +79,7 @@ interface InternetPlans {
 interface Stat {
   number: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }
 
 const ServicesSection = () => {
@@ -227,14 +227,9 @@ const ServicesSection = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut" as const
+        ease: "easeOut"
       }
     }
-  };
-
-  const cardHoverVariants = {
-    rest: { scale: 1, y: 0 },
-    hover: { scale: 1.02, y: -5 }
   };
 
   return (
@@ -498,7 +493,7 @@ const ServicesSection = () => {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover="hover"
+                  whileHover={{ scale: 1.02, y: -5 }}
                   className={`group relative p-8 rounded-3xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${
                     plan.popular 
                       ? `${colorMap[internetPlans[activePlanTab].color].border} border-2 shadow-2xl scale-105` 

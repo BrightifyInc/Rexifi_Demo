@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiHeadphones, FiMessageCircle, FiMail, FiZap, FiSearch, FiChevronDown, FiVideo, FiUser, FiWifi, FiArrowRight, FiHelpCircle } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
+import { ReactElement } from 'react';
 
 interface ColorMap {
   blue: {
@@ -42,7 +43,7 @@ interface ColorMap {
 interface SupportCategory {
   id: string;
   name: string;
-  icon: JSX.Element;
+  icon: ReactElement;
   color: keyof ColorMap;
   count: number;
 }
@@ -64,7 +65,7 @@ interface FAQData {
 interface SupportOption {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: ReactElement;
   color: keyof ColorMap;
   responseTime: string;
   available: boolean;
@@ -320,10 +321,7 @@ const SupportPage = () => {
     }
   };
 
-  const cardHoverVariants = {
-    rest: { scale: 1, y: 0 },
-    hover: { scale: 1.02, y: -5 }
-  };
+  // Removed unused cardHoverVariants to fix TS6133 error
 
   const filteredFAQs = faqData[activeCategory as keyof FAQData].filter(faq =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
@@ -424,7 +422,7 @@ const SupportPage = () => {
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  whileHover="hover"
+                  whileHover={{ scale: 1.02, y: -5 }}
                   className={`group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${colorMap[option.color].border} cursor-pointer transition-all duration-300`}
                   onClick={() => option.title === 'Live Chat' && setIsChatOpen(true)}
                 >

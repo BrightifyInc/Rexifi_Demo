@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPlay, FiDownload, FiUpload, FiZap, FiClock, FiShare2, FiRefreshCw, FiAward, FiServer } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
+import { ReactElement } from 'react';
 
 interface ColorMap {
   blue: {
@@ -63,7 +64,7 @@ interface TestResult {
 }
 
 interface SpeedGuideItem {
-  icon: JSX.Element;
+  icon: ReactElement;
   title: string;
   description: string;
   good: string;
