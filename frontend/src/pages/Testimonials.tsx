@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiHeart, FiZap, FiUsers } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
+import { ReactElement } from 'react';
 
 // Define TypeScript interfaces
 interface Testimonial {
@@ -30,7 +31,7 @@ interface Category {
 interface Stat {
   number: string;
   label: string;
-  icon: React.ReactElement;
+  icon: ReactElement;
   color: string;
 }
 
@@ -235,7 +236,7 @@ const Testimonials = () => {
   };
 
   const stars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
+    return Array.from({ length: 5 }, (_, i: number) => (
       <FiStar
         key={i}
         className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
