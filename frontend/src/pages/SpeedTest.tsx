@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiPlay, FiDownload, FiUpload, FiZap, FiClock, FiShare2, FiRefreshCw, FiAward, FiServer } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 interface ColorMap {
   blue: {

@@ -575,7 +575,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiWifi, FiZap, FiServer, FiGlobe, FiCheck, FiArrowRight, FiInfo, FiTool, FiClock, FiUsers, FiShield } from 'react-icons/fi';
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 // Define types
 interface Plan {

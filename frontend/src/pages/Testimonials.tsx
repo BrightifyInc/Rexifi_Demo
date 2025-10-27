@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiHeart, FiZap, FiUsers } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 // Define TypeScript interfaces
 interface Testimonial {
