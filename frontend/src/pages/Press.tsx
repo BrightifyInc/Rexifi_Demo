@@ -1,17 +1,94 @@
-import React, { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiExternalLink, FiCalendar, FiUser, FiBook, FiVideo, FiAward, FiTrendingUp, FiShare2, FiDownload, FiSearch } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiPlay, FiPause, FiExternalLink, FiCalendar, FiUser, FiBook, FiAward, FiTrendingUp, FiShare2, FiDownload, FiSearch } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+interface PressArticle {
+  id: number;
+  title: string;
+  outlet: string;
+  type: string;
+  date: string;
+  author: string;
+  excerpt: string;
+  readTime: string;
+  logo?: string;
+  link: string;
+  image?: string;
+  featured?: boolean;
+  highlights?: string[];
+}
+
+interface ColorMap {
+  blue: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  purple: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  green: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  orange: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+}
+
+interface Category {
+  id: string;
+  label: string;
+  count: number;
+  color: keyof ColorMap;
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  icon: JSX.Element;
+  color: keyof ColorMap;
+}
+
+interface MediaAsset {
+  name: string;
+  format: string;
+  size: string;
+}
+
+interface Contact {
+  name: string;
+  role: string;
+  email: string;
+}
+
 const PressPage = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
-  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState<PressArticle | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -46,7 +123,7 @@ const PressPage = () => {
     }
   };
 
-  const categories = [
+  const categories: Category[] = [
     { id: 'all', label: 'All Press', count: 42, color: 'blue' },
     { id: 'news', label: 'News Coverage', count: 18, color: 'green' },
     { id: 'awards', label: 'Awards', count: 8, color: 'orange' },
@@ -54,7 +131,7 @@ const PressPage = () => {
     { id: 'releases', label: 'Press Releases', count: 4, color: 'blue' }
   ];
 
-  const featuredPress = [
+  const featuredPress: PressArticle[] = [
     {
       id: 1,
       title: "Rexifi Revolutionizes African Internet Connectivity with 5G Expansion",
@@ -99,7 +176,7 @@ const PressPage = () => {
     }
   ];
 
-  const pressArticles = [
+  const pressArticles: PressArticle[] = [
     {
       id: 4,
       title: "Rexifi Partners with Local Governments to Expand Fiber Network",
@@ -186,7 +263,7 @@ const PressPage = () => {
     ]
   };
 
-  const stats = [
+  const stats: Stat[] = [
     { number: "500+", label: "Media Mentions", icon: <FiBook className="w-6 h-6" />, color: "blue" },
     { number: "25+", label: "Industry Awards", icon: <FiAward className="w-6 h-6" />, color: "orange" },
     { number: "15+", label: "Countries Covered", icon: <FiTrendingUp className="w-6 h-6" />, color: "green" },
@@ -209,12 +286,12 @@ const PressPage = () => {
     setCurrentSlide((prev) => (prev - 1 + filteredFeatured.length) % filteredFeatured.length);
   };
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
   // Auto-play functionality
-  React.useEffect(() => {
+  useEffect(() => {
     if (!autoplay || filteredFeatured.length === 0) return;
 
     const interval = setInterval(() => {
@@ -241,29 +318,12 @@ const PressPage = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
 
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
-  };
-
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -271,460 +331,465 @@ const PressPage = () => {
     });
   };
 
-  return (
+  const getTypeColor = (type: string): keyof ColorMap => {
+    switch (type) {
+      case 'news': return 'green';
+      case 'awards': return 'orange';
+      case 'interviews': return 'purple';
+      default: return 'blue';
+    }
+  };
 
+  return (
     <>
-    
       <Navbar />
       
       <div className="min-h-screen bg-gray-950">
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+            <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
           </div>
 
           <div className="relative z-10 container mx-auto px-4">
-          <motion.div
+            <motion.div
               initial="hidden"
               animate="visible"
               variants={containerVariants}
               className="text-center"
-          >
+            >
               <motion.span
-              variants={itemVariants}
-              className="inline-block rounded-full bg-gray-800/50 px-6 py-3 text-sm text-gray-300 mb-6 border border-gray-700/50"
+                variants={itemVariants}
+                className="inline-block rounded-full bg-gray-800/50 px-6 py-3 text-sm text-gray-300 mb-6 border border-gray-700/50"
               >
-              📰 PRESS & MEDIA
+                📰 PRESS & MEDIA
               </motion.span>
               
               <motion.h1
-              variants={itemVariants}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-white via-blue-100 to-purple-200 bg-clip-text text-transparent"
+                variants={itemVariants}
+                className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-white via-blue-100 to-purple-200 bg-clip-text text-transparent"
               >
-              Rexifi in the
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">News</span>
+                Rexifi in the
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">News</span>
               </motion.h1>
               
               <motion.p
-              variants={itemVariants}
-              className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed"
+                variants={itemVariants}
+                className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed"
               >
-              Latest news coverage, awards, and announcements about Rexifi's mission to 
-              revolutionize internet connectivity across Africa.
+                Latest news coverage, awards, and announcements about Rexifi's mission to 
+                revolutionize internet connectivity across Africa.
               </motion.p>
-          </motion.div>
+            </motion.div>
 
-          {/* Stats */}
-          <motion.div
+            {/* Stats */}
+            <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto"
-          >
+            >
               {stats.map((stat, index) => (
-              <motion.div
+                <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
                   className="text-center p-6 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10"
-              >
+                >
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${colorMap[stat.color].bg} mb-3`}>
-                  <div className={colorMap[stat.color].text}>
+                    <div className={colorMap[stat.color].text}>
                       {stat.icon}
-                  </div>
+                    </div>
                   </div>
                   <div className={`text-2xl md:text-3xl font-bold ${colorMap[stat.color].text} mb-1`}>{stat.number}</div>
                   <div className="text-gray-400 text-sm">{stat.label}</div>
-              </motion.div>
+                </motion.div>
               ))}
-          </motion.div>
+            </motion.div>
           </div>
-      </section>
+        </section>
 
-      {/* Featured Press Slider */}
-      {filteredFeatured.length > 0 && (
+        {/* Featured Press Slider */}
+        {filteredFeatured.length > 0 && (
           <section className="py-16">
-          <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4">
               <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="text-center mb-12"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={containerVariants}
+                className="text-center mb-12"
               >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+                <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
                   <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Featured</span> Coverage
-              </motion.h2>
+                </motion.h2>
               </motion.div>
 
               {/* Slider Container */}
               <div className="relative max-w-6xl mx-auto">
-              {/* Slider Controls */}
-              <div className="flex justify-center items-center gap-4 mb-8">
+                {/* Slider Controls */}
+                <div className="flex justify-center items-center gap-4 mb-8">
                   <button
-                  onClick={() => setAutoplay(!autoplay)}
-                  className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                    onClick={() => setAutoplay(!autoplay)}
+                    className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
                   >
-                  {autoplay ? <FiPause className="w-5 h-5" /> : <FiPlay className="w-5 h-5" />}
+                    {autoplay ? <FiPause className="w-5 h-5" /> : <FiPlay className="w-5 h-5" />}
                   </button>
                   
                   <button
-                  onClick={prevSlide}
-                  className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                    onClick={prevSlide}
+                    className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
                   >
-                  <FiChevronLeft className="w-6 h-6" />
+                    <FiChevronLeft className="w-6 h-6" />
                   </button>
 
                   <div className="flex gap-2">
-                  {filteredFeatured.map((_, index) => (
+                    {filteredFeatured.map((_, index) => (
                       <button
-                      key={index}
-                      onClick={() => goToSlide(index)}
-                      className={`w-3 h-3 rounded-full transition-all ${
+                        key={index}
+                        onClick={() => goToSlide(index)}
+                        className={`w-3 h-3 rounded-full transition-all ${
                           index === currentSlide ? 'bg-blue-500' : 'bg-gray-600'
-                      }`}
+                        }`}
                       />
-                  ))}
+                    ))}
                   </div>
 
                   <button
-                  onClick={nextSlide}
-                  className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
+                    onClick={nextSlide}
+                    className="p-3 rounded-full bg-gray-800 text-gray-300 hover:text-white transition-colors"
                   >
-                  <FiChevronRight className="w-6 h-6" />
+                    <FiChevronRight className="w-6 h-6" />
                   </button>
-              </div>
+                </div>
 
-              {/* Slider */}
-              <div className="relative h-96 overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-gray-700/50">
+                {/* Slider */}
+                <div className="relative h-96 overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-gray-700/50">
                   <AnimatePresence mode="wait">
-                  {filteredFeatured.map((article, index) => (
+                    {filteredFeatured.map((article, index) => (
                       index === currentSlide && (
-                      <motion.div
+                        <motion.div
                           key={article.id}
                           initial={{ opacity: 0, x: 300 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -300 }}
                           transition={{ duration: 0.5 }}
                           className="absolute inset-0"
-                      >
+                        >
                           <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-                          {/* Image Section */}
-                          <div className="relative h-48 lg:h-full">
+                            {/* Image Section */}
+                            <div className="relative h-48 lg:h-full">
                               <img
-                              src={article.image}
-                              alt={article.title}
-                              className="w-full h-full object-cover"
+                                src={article.image}
+                                alt={article.title}
+                                className="w-full h-full object-cover"
                               />
                               <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent lg:bg-gradient-to-l" />
                               <div className="absolute bottom-4 left-4 lg:bottom-auto lg:top-4 lg:left-auto lg:right-4">
-                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${colorMap[article.type === 'news' ? 'green' : article.type === 'awards' ? 'orange' : 'purple'].solid} text-white`}>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${colorMap[getTypeColor(article.type)].solid} text-white`}>
                                   {article.type.charAt(0).toUpperCase() + article.type.slice(1)}
-                              </span>
+                                </span>
                               </div>
-                          </div>
+                            </div>
 
-                          {/* Content Section */}
-                          <div className="p-8 flex flex-col justify-center">
+                            {/* Content Section */}
+                            <div className="p-8 flex flex-col justify-center">
                               <div className="mb-4">
-                              <span className="text-blue-400 font-semibold">{article.outlet}</span>
-                              <div className="flex items-center gap-4 text-sm text-gray-400 mt-2">
+                                <span className="text-blue-400 font-semibold">{article.outlet}</span>
+                                <div className="flex items-center gap-4 text-sm text-gray-400 mt-2">
                                   <div className="flex items-center gap-1">
-                                  <FiCalendar className="w-4 h-4" />
-                                  {formatDate(article.date)}
+                                    <FiCalendar className="w-4 h-4" />
+                                    {formatDate(article.date)}
                                   </div>
                                   <div className="flex items-center gap-1">
-                                  <FiUser className="w-4 h-4" />
-                                  {article.author}
+                                    <FiUser className="w-4 h-4" />
+                                    {article.author}
                                   </div>
                                   <span>{article.readTime}</span>
-                              </div>
+                                </div>
                               </div>
 
                               <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
-                              {article.title}
+                                {article.title}
                               </h3>
 
                               <p className="text-gray-300 mb-6 leading-relaxed">
-                              {article.excerpt}
+                                {article.excerpt}
                               </p>
 
                               <div className="flex flex-wrap gap-2 mb-6">
-                              {article.highlights.map((highlight, idx) => (
+                                {article.highlights?.map((highlight, idx) => (
                                   <span
-                                  key={idx}
-                                  className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20"
+                                    key={idx}
+                                    className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20"
                                   >
-                                  {highlight}
+                                    {highlight}
                                   </span>
-                              ))}
+                                ))}
                               </div>
 
                               <div className="flex gap-4">
-                              <a
+                                <a
                                   href={article.link}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-                              >
+                                >
                                   Read Full Article
                                   <FiExternalLink className="w-4 h-4" />
-                              </a>
-                              <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                                </a>
+                                <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
                                   <FiShare2 className="w-4 h-4" />
                                   Share
-                              </button>
+                                </button>
                               </div>
+                            </div>
                           </div>
-                          </div>
-                      </motion.div>
+                        </motion.div>
                       )
-                  ))}
+                    ))}
                   </AnimatePresence>
+                </div>
               </div>
-              </div>
-          </div>
+            </div>
           </section>
-      )}
+        )}
 
-      {/* Press Articles Grid */}
-      <section className="py-16 bg-gray-900/30">
+        {/* Press Articles Grid */}
+        <section className="py-16 bg-gray-900/30">
           <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               {/* Header with Search and Filter */}
               <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={containerVariants}
+                className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12"
               >
-              <div>
+                <div>
                   <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
-                  Latest <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Press</span>
+                    Latest <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Press</span>
                   </motion.h2>
                   <motion.p variants={itemVariants} className="text-xl text-gray-400">
-                  News articles, awards, and announcements from around the world
+                    News articles, awards, and announcements from around the world
                   </motion.p>
-              </div>
+                </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
                   {/* Search */}
                   <div className="relative">
-                  <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
+                    <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
                       type="text"
                       placeholder="Search press..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors w-full lg:w-64"
-                  />
+                    />
                   </div>
-              </div>
+                </div>
               </motion.div>
 
               {/* Category Filter */}
               <motion.div
-              variants={containerVariants}
-              className="flex flex-wrap gap-4 mb-8"
+                variants={containerVariants}
+                className="flex flex-wrap gap-4 mb-8"
               >
-              {categories.map((category) => (
+                {categories.map((category) => (
                   <motion.button
-                  key={category.id}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                    key={category.id}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`flex items-center gap-3 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                       activeCategory === category.id
-                      ? `${colorMap[category.color].solid} text-white shadow-lg`
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
+                        ? `${colorMap[category.color].solid} text-white shadow-lg`
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    }`}
                   >
-                  {category.label}
-                  <span className="bg-white/20 px-2 py-1 rounded-full text-xs">
+                    {category.label}
+                    <span className="bg-white/20 px-2 py-1 rounded-full text-xs">
                       {category.count}
-                  </span>
+                    </span>
                   </motion.button>
-              ))}
+                ))}
               </motion.div>
 
               {/* Articles Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredArticles.map((article, index) => (
+                {filteredArticles.map((article) => (
                   <motion.article
-                  key={article.id}
-                  variants={itemVariants}
-                  whileHover="hover"
-                  className="group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 cursor-pointer"
-                  onClick={() => setSelectedArticle(article)}
+                    key={article.id}
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.02 }}
+                    className="group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 cursor-pointer"
+                    onClick={() => setSelectedArticle(article)}
                   >
-                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                      <div className="text-2xl">{article.logo}</div>
-                      <div>
+                        <div className="text-2xl">{article.logo}</div>
+                        <div>
                           <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors line-clamp-2">
-                          {article.title}
+                            {article.title}
                           </h3>
                           <p className="text-gray-400 text-sm">{article.outlet}</p>
+                        </div>
                       </div>
-                      </div>
-                  </div>
+                    </div>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                       <div className="flex items-center gap-1">
-                      <FiCalendar className="w-4 h-4" />
-                      {formatDate(article.date)}
+                        <FiCalendar className="w-4 h-4" />
+                        {formatDate(article.date)}
                       </div>
                       <span>{article.readTime}</span>
-                  </div>
+                    </div>
 
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
                       {article.excerpt}
-                  </p>
+                    </p>
 
-                  <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">By {article.author}</span>
                       <FiExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
-                  </div>
+                    </div>
                   </motion.article>
-              ))}
+                ))}
               </div>
+            </div>
           </div>
-          </div>
-      </section>
+        </section>
 
-      {/* Media Kit Section */}
-      <section className="py-16">
+        {/* Media Kit Section */}
+        <section className="py-16">
           <div className="container mx-auto px-4">
-          <motion.div
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={containerVariants}
               className="max-w-6xl mx-auto"
-          >
+            >
               <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-12 text-center">
-              Media <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Resources</span>
+                Media <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Resources</span>
               </motion.h2>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Download Assets */}
-              <motion.div variants={itemVariants} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700/50">
+                {/* Download Assets */}
+                <motion.div variants={itemVariants} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700/50">
                   <h3 className="text-2xl font-bold text-white mb-6">Media Assets</h3>
                   <div className="space-y-4">
-                  {mediaKit.logoPack.map((asset, index) => (
+                    {mediaKit.logoPack.map((asset, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-gray-700/50">
-                      <div>
+                        <div>
                           <div className="font-semibold text-white">{asset.name}</div>
                           <div className="text-sm text-gray-400">{asset.format} • {asset.size}</div>
-                      </div>
-                      <button className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
+                        </div>
+                        <button className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
                           <FiDownload className="w-4 h-4" />
                           Download
-                      </button>
+                        </button>
                       </div>
-                  ))}
+                    ))}
                   </div>
-              </motion.div>
+                </motion.div>
 
-              {/* Press Contacts */}
-              <motion.div variants={itemVariants} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700/50">
+                {/* Press Contacts */}
+                <motion.div variants={itemVariants} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700/50">
                   <h3 className="text-2xl font-bold text-white mb-6">Press Contacts</h3>
                   <div className="space-y-4">
-                  {mediaKit.contacts.map((contact, index) => (
+                    {mediaKit.contacts.map((contact, index) => (
                       <div key={index} className="p-4 bg-white/5 rounded-xl border border-gray-700/50">
-                      <div className="font-semibold text-white">{contact.name}</div>
-                      <div className="text-sm text-gray-400 mb-2">{contact.role}</div>
-                      <a href={`mailto:${contact.email}`} className="text-blue-400 hover:text-blue-300 transition-colors">
+                        <div className="font-semibold text-white">{contact.name}</div>
+                        <div className="text-sm text-gray-400 mb-2">{contact.role}</div>
+                        <a href={`mailto:${contact.email}`} className="text-blue-400 hover:text-blue-300 transition-colors">
                           {contact.email}
-                      </a>
+                        </a>
                       </div>
-                  ))}
+                    ))}
                   </div>
-              </motion.div>
+                </motion.div>
               </div>
-          </motion.div>
+            </motion.div>
           </div>
-      </section>
+        </section>
 
-      {/* Article Detail Modal */}
-      <AnimatePresence>
+        {/* Article Detail Modal */}
+        <AnimatePresence>
           {selectedArticle && (
-          <motion.div
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
               onClick={() => setSelectedArticle(null)}
-          >
+            >
               <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border-2 border-blue-500/20"
-              onClick={(e) => e.stopPropagation()}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border-2 border-blue-500/20"
+                onClick={(e) => e.stopPropagation()}
               >
-              <div className="p-8">
+                <div className="p-8">
                   <div className="flex items-start justify-between mb-6">
-                  <div>
+                    <div>
                       <span className="text-blue-400 font-semibold">{selectedArticle.outlet}</span>
                       <div className="flex items-center gap-4 text-sm text-gray-400 mt-2">
-                      <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1">
                           <FiCalendar className="w-4 h-4" />
                           {formatDate(selectedArticle.date)}
-                      </div>
-                      <div className="flex items-center gap-1">
+                        </div>
+                        <div className="flex items-center gap-1">
                           <FiUser className="w-4 h-4" />
                           {selectedArticle.author}
+                        </div>
+                        <span>{selectedArticle.readTime}</span>
                       </div>
-                      <span>{selectedArticle.readTime}</span>
-                      </div>
-                  </div>
-                  <button
+                    </div>
+                    <button
                       onClick={() => setSelectedArticle(null)}
                       className="text-gray-400 hover:text-white transition-colors"
-                  >
+                    >
                       ✕
-                  </button>
+                    </button>
                   </div>
                   
                   <h2 className="text-3xl font-bold text-white mb-6">
-                  {selectedArticle.title}
+                    {selectedArticle.title}
                   </h2>
                   
                   <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                  {selectedArticle.excerpt}
+                    {selectedArticle.excerpt}
                   </p>
                   
                   <div className="flex gap-4">
-                  <a
+                    <a
                       href={selectedArticle.link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-                  >
+                    >
                       Read Full Article
                       <FiExternalLink className="w-4 h-4" />
-                  </a>
-                  <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors border border-gray-600 px-6 py-3 rounded-xl">
+                    </a>
+                    <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors border border-gray-600 px-6 py-3 rounded-xl">
                       <FiShare2 className="w-4 h-4" />
                       Share
-                  </button>
+                    </button>
                   </div>
-              </div>
+                </div>
               </motion.div>
-          </motion.div>
+            </motion.div>
           )}
-      </AnimatePresence>
+        </AnimatePresence>
       </div>
 
       <RexifiFooter />
-
     </>
-
   );
 };
 

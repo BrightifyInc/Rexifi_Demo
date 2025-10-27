@@ -1,12 +1,89 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiWifi, FiHome, FiBriefcase, FiGift, FiStar, FiCheck, FiPlay, FiUsers, FiShield, FiZap, FiGlobe } from 'react-icons/fi';
+import { FiArrowRight, FiWifi, FiBriefcase, FiStar, FiCheck, FiPlay, FiUsers, FiShield, FiZap, FiGlobe } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+interface ColorMap {
+  blue: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  purple: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  green: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  orange: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+}
+
+interface Service {
+  title: string;
+  description: string;
+  features: string[];
+  icon: JSX.Element;
+  color: keyof ColorMap;
+  link: string;
+  image: string;
+  stats: Record<string, string>;
+}
+
+interface Plan {
+  speed: string;
+  price: string;
+  popular: boolean;
+  features: string[];
+}
+
+interface InternetPlans {
+  fiber: {
+    color: keyof ColorMap;
+    plans: Plan[];
+  };
+  wireless: {
+    color: keyof ColorMap;
+    plans: Plan[];
+  };
+  enterprise: {
+    color: keyof ColorMap;
+    plans: Plan[];
+  };
+  free: {
+    color: keyof ColorMap;
+    plans: Plan[];
+  };
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  icon: JSX.Element;
+}
 
 const ServicesSection = () => {
-  const services = [
+  const services: Service[] = [
     {
       title: "Fiber and Radio Broadband",
       description: "Our service is completely independent of national telcos. Our fiber optic backbone and access networks ensure your data is secured with enterprise-grade encryption and reliability.",
@@ -49,7 +126,7 @@ const ServicesSection = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -85,11 +162,11 @@ const ServicesSection = () => {
   };
 
   const [activeService, setActiveService] = useState(0);
-  const [activePlanTab, setActivePlanTab] = useState('fiber');
+  const [activePlanTab, setActivePlanTab] = useState<keyof InternetPlans>('fiber');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const internetPlans = {
+  const internetPlans: InternetPlans = {
     fiber: {
       color: 'blue',
       plans: [
@@ -126,7 +203,7 @@ const ServicesSection = () => {
     }
   };
 
-  const stats = [
+  const stats: Stat[] = [
     { number: "50K+", label: "Happy Customers", icon: <FiUsers className="w-6 h-6" /> },
     { number: "99.9%", label: "Uptime Guarantee", icon: <FiShield className="w-6 h-6" /> },
     { number: "24/7", label: "Support", icon: <FiStar className="w-6 h-6" /> },
@@ -150,7 +227,7 @@ const ServicesSection = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
@@ -161,9 +238,7 @@ const ServicesSection = () => {
   };
 
   return (
-
     <>
-
       <Navbar />
 
       <div className="min-h-screen bg-gray-950">
@@ -399,7 +474,7 @@ const ServicesSection = () => {
                   key={key}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActivePlanTab(key)}
+                  onClick={() => setActivePlanTab(key as keyof InternetPlans)}
                   className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                     activePlanTab === key
                       ? `${colorMap[plan.color].solid} text-white shadow-lg`
@@ -424,7 +499,6 @@ const ServicesSection = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover="hover"
-                  variants={cardHoverVariants}
                   className={`group relative p-8 rounded-3xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${
                     plan.popular 
                       ? `${colorMap[internetPlans[activePlanTab].color].border} border-2 shadow-2xl scale-105` 
@@ -512,9 +586,7 @@ const ServicesSection = () => {
       </div>
 
       <RexifiFooter />
-
     </>
-
   );
 };
 

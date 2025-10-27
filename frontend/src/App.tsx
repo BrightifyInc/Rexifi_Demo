@@ -25,7 +25,6 @@ import UserSupport from "./backend/UserSupport"
 import Usage from "./backend/Usage"
 
 
-import LandingPage from "./pages/LandingPage";
 
 
 
@@ -63,7 +62,6 @@ function App() {
           <Route path="/pricing" element={<Pricing />}></Route>
           <Route path="/testimonials" element={<Testimonials />}></Route>
           <Route path="/free-survey" element={<GetFreeSurvey />}></Route>
-          <Route path="/ads" element={<LandingPage />}></Route>
         </Routes>
       </AnimatePresence>
     </BrowserRouter>

@@ -1,21 +1,67 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMapPin, FiSearch, FiWifi, FiUsers, FiZap, FiChevronDown, FiPlay, FiCheck, FiX, FiNavigation, FiClock } from 'react-icons/fi';
+import { FiMapPin, FiSearch, FiWifi, FiUsers, FiZap, FiNavigation, FiClock } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+// Define types
+interface Coordinates {
+  x: number;
+  y: number;
+}
+
+interface CoverageArea {
+  id: number;
+  name: string;
+  type: string;
+  coverage: string;
+  speed: string;
+  status: string;
+  coordinates: Coordinates;
+  population: string;
+  lastUpdate: string;
+  technologies: string[];
+  image: string;
+}
+
+interface TechnologyType {
+  color: 'blue' | 'purple' | 'green' | 'orange';
+  label: string;
+  icon: JSX.Element;
+}
+
+interface ColorMap {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  gradient: string;
+  solid: string;
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  color: 'blue' | 'green' | 'purple' | 'orange';
+}
+
+interface ExpansionPlan {
+  area: string;
+  timeline: string;
+  tech: string;
+  color: 'blue' | 'green' | 'orange';
+}
 
 const CoverageMap = () => {
-  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedArea, setSelectedArea] = useState<CoverageArea | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
-  const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState('map');
   const [selectedTechnology, setSelectedTechnology] = useState('all');
-  const mapRef = useRef(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   // Sample coverage data
-  const coverageAreas = [
+  const coverageAreas: CoverageArea[] = [
     {
       id: 1,
       name: "Central Business District",
@@ -83,21 +129,21 @@ const CoverageMap = () => {
     }
   ];
 
-  const technologyTypes = {
+  const technologyTypes: Record<string, TechnologyType> = {
     fiber: { color: 'blue', label: 'Fiber Optic', icon: <FiZap /> },
     wireless: { color: 'green', label: 'Wireless', icon: <FiWifi /> },
     enterprise: { color: 'purple', label: 'Enterprise', icon: <FiUsers /> },
     mixed: { color: 'orange', label: 'Mixed', icon: <FiNavigation /> }
   };
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     excellent: 'from-green-500 to-emerald-400',
     good: 'from-blue-500 to-cyan-400',
     moderate: 'from-yellow-500 to-amber-400',
     poor: 'from-red-500 to-pink-400'
   };
 
-  const colorMap = {
+  const colorMap: Record<'blue' | 'purple' | 'green' | 'orange', ColorMap> = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -156,7 +202,7 @@ const CoverageMap = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
@@ -168,8 +214,20 @@ const CoverageMap = () => {
     tap: { scale: 0.9 }
   };
 
-  return (
+  const stats: Stat[] = [
+    { number: "50+", label: "Cities Covered", color: "blue" },
+    { number: "98%", label: "Network Uptime", color: "green" },
+    { number: "1M+", label: "Users Served", color: "purple" },
+    { number: "24/7", label: "Support", color: "orange" }
+  ];
 
+  const expansionPlans: ExpansionPlan[] = [
+    { area: "Rural East Zone", timeline: "Q2 2024", tech: "Wireless", color: "green" },
+    { area: "Coastal Region", timeline: "Q3 2024", tech: "Fiber", color: "blue" },
+    { area: "Mountain Communities", timeline: "Q4 2024", tech: "Mixed", color: "orange" }
+  ];
+
+  return (
     <>
       <Navbar />
       
@@ -220,12 +278,7 @@ const CoverageMap = () => {
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto"
             >
-              {[
-                { number: "50+", label: "Cities Covered", color: "blue" },
-                { number: "98%", label: "Network Uptime", color: "green" },
-                { number: "1M+", label: "Users Served", color: "purple" },
-                { number: "24/7", label: "Support", color: "orange" }
-              ].map((stat, index) => (
+              {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
@@ -527,11 +580,7 @@ const CoverageMap = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { area: "Rural East Zone", timeline: "Q2 2024", tech: "Wireless", color: "green" },
-                { area: "Coastal Region", timeline: "Q3 2024", tech: "Fiber", color: "blue" },
-                { area: "Mountain Communities", timeline: "Q4 2024", tech: "Mixed", color: "orange" }
-              ].map((plan, index) => (
+              {expansionPlans.map((plan, index) => (
                 <motion.div
                   key={index}
                   variants={itemVariants}
@@ -556,9 +605,7 @@ const CoverageMap = () => {
       </div>
 
       <RexifiFooter />
-      
     </>
-
   );
 };
 

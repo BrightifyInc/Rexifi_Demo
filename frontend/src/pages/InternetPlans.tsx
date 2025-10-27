@@ -1,17 +1,87 @@
-import React, { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiWifi, FiHome, FiBriefcase, FiGift, FiStar, FiCheck, FiZap, FiUsers, FiClock, FiDownload, FiUpload, FiHelpCircle, FiArrowRight, FiPlay, FiAward } from 'react-icons/fi';
+import { FiWifi, FiBriefcase, FiGift, FiZap, FiCheck, FiDownload, FiUpload } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+interface Plan {
+  speed: string;
+  price: string;
+  popular: boolean;
+  upload: string;
+  devices: string;
+  bestFor: string[];
+  features: string[];
+  description?: string;
+}
+
+interface PlanType {
+  color: 'blue' | 'purple' | 'green' | 'orange';
+  icon: JSX.Element;
+  title: string;
+  description: string;
+  plans: Plan[];
+}
+
+interface InternetPlansData {
+  fiber: PlanType;
+  wireless: PlanType;
+  enterprise: PlanType;
+  free: PlanType;
+}
+
+interface ColorMap {
+  blue: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  purple: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  green: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  orange: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+}
+
+interface UsageExample {
+  speed: string;
+  activities: string[];
+  users: string;
+}
+
+interface Stat {
+  speed: string;
+  label: string;
+  color: keyof ColorMap;
+}
 
 const InternetPlansPage = () => {
-  const [activePlanTab, setActivePlanTab] = useState('fiber');
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [hoveredFeature, setHoveredFeature] = useState(null);
+  const [activePlanTab, setActivePlanTab] = useState<keyof InternetPlansData>('fiber');
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -46,7 +116,7 @@ const InternetPlansPage = () => {
     }
   };
 
-  const internetPlans = {
+  const internetPlans: InternetPlansData = {
     fiber: {
       color: 'blue',
       icon: <FiZap className="w-6 h-6" />,
@@ -210,7 +280,7 @@ const InternetPlansPage = () => {
     }
   };
 
-  const usageExamples = [
+  const usageExamples: UsageExample[] = [
     { speed: '5-10 Mbps', activities: ['Email', 'Web Browsing', 'Social Media'], users: '1-2' },
     { speed: '15-25 Mbps', activities: ['HD Streaming', 'Video Calls', 'Online Gaming'], users: '3-4' },
     { speed: '30-50 Mbps', activities: ['4K Streaming', 'Smart Home', 'Remote Work'], users: '5-8' },
@@ -234,7 +304,7 @@ const InternetPlansPage = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
@@ -246,12 +316,16 @@ const InternetPlansPage = () => {
 
   const currentPlanType = internetPlans[activePlanTab];
 
+  const stats: Stat[] = [
+    { speed: "1Gbps", label: "Max Fiber Speed", color: "blue" },
+    { speed: "99.9%", label: "Uptime Guarantee", color: "green" },
+    { speed: "24/7", label: "Support", color: "purple" },
+    { speed: "0ms", label: "Lowest Latency", color: "orange" }
+  ];
+
   return (
-
     <>
-
       <Navbar />
-
       <div className="min-h-screen bg-gray-950">
         {/* Hero Section */}
         <section className="relative py-20 overflow-hidden">
@@ -299,12 +373,7 @@ const InternetPlansPage = () => {
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto"
             >
-              {[
-                { speed: "1Gbps", label: "Max Fiber Speed", color: "blue" },
-                { speed: "99.9%", label: "Uptime Guarantee", color: "green" },
-                { speed: "24/7", label: "Support", color: "purple" },
-                { speed: "0ms", label: "Lowest Latency", color: "orange" }
-              ].map((stat, index) => (
+              {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
@@ -348,7 +417,7 @@ const InternetPlansPage = () => {
                   variants={itemVariants}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActivePlanTab(key)}
+                  onClick={() => setActivePlanTab(key as keyof InternetPlansData)}
                   className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-300 ${
                     activePlanTab === key
                       ? `${colorMap[plan.color].solid} text-white shadow-2xl`
@@ -450,7 +519,7 @@ const InternetPlansPage = () => {
                     <div className="mb-4">
                       <h4 className="text-sm font-semibold text-gray-400 mb-2">Perfect For:</h4>
                       <div className="flex flex-wrap gap-1">
-                        {plan.bestFor.map((use, idx) => (
+                        {plan.bestFor.map((use: string, idx: number) => (
                           <span key={idx} className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">
                             {use}
                           </span>
@@ -460,7 +529,7 @@ const InternetPlansPage = () => {
 
                     {/* Features */}
                     <ul className="space-y-2 mb-6">
-                      {plan.features.map((feature, idx) => (
+                      {plan.features.map((feature: string, idx: number) => (
                         <li key={idx} className="flex items-center text-sm text-gray-300">
                           <FiCheck className={`w-4 h-4 ${colorMap[currentPlanType.color].text} mr-2 flex-shrink-0`} />
                           {feature}
@@ -543,11 +612,8 @@ const InternetPlansPage = () => {
           </div>
         </section>
       </div>
-
       <RexifiFooter />
-
     </>
-
   );
 };
 

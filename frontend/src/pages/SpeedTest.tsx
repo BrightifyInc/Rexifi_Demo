@@ -1,15 +1,81 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlay, FiDownload, FiUpload, FiWifi, FiZap, FiClock, FiMapPin, FiShare2, FiRefreshCw, FiAward, FiBarChart2, FiServer } from 'react-icons/fi';
+import { FiPlay, FiDownload, FiUpload, FiZap, FiClock, FiShare2, FiRefreshCw, FiAward, FiServer } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+interface ColorMap {
+  blue: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  purple: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  green: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+  orange: {
+    bg: string;
+    text: string;
+    border: string;
+    hover: string;
+    gradient: string;
+    solid: string;
+  };
+}
+
+interface SpeedRange {
+  min: number;
+  color: keyof ColorMap;
+  label: string;
+}
+
+interface SpeedRanges {
+  excellent: SpeedRange;
+  good: SpeedRange;
+  fair: SpeedRange;
+  poor: SpeedRange;
+}
+
+interface TestResult {
+  download: number;
+  upload: number;
+  ping: number;
+  jitter: number;
+  server: string;
+  isp: string;
+  timestamp: Date | null;
+}
+
+interface SpeedGuideItem {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+  good: string;
+  color: keyof ColorMap;
+}
+
 const SpeedTestPage = () => {
-  const [testStatus, setTestStatus] = useState('ready'); // ready, testing, complete
-  const [testPhase, setTestPhase] = useState(''); // download, upload, ping
+  const [testStatus, setTestStatus] = useState<'ready' | 'testing' | 'complete'>('ready');
+  const [testPhase, setTestPhase] = useState<string>('');
   const [progress, setProgress] = useState(0);
 
-  const [results, setResults] = useState({
+  const [results, setResults] = useState<TestResult>({
     download: 0,
     upload: 0,
     ping: 0,
@@ -18,13 +84,9 @@ const SpeedTestPage = () => {
     isp: 'Rexifi Networks',
     timestamp: null
   });
-  const [history, setHistory] = useState([]);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [history, setHistory] = useState<TestResult[]>([]);
 
-  const progressRef = useRef(null);
-  const animationRef = useRef(null);
-
-  const colorMap = {
+  const colorMap: ColorMap = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -59,17 +121,17 @@ const SpeedTestPage = () => {
     }
   };
 
-  const speedRanges = {
+  const speedRanges: SpeedRanges = {
     excellent: { min: 50, color: 'green', label: 'Excellent' },
     good: { min: 25, color: 'blue', label: 'Good' },
     fair: { min: 10, color: 'orange', label: 'Fair' },
-    poor: { min: 0, color: 'red', label: 'Poor' }
+    poor: { min: 0, color: 'orange', label: 'Poor' }
   };
 
-  const getSpeedQuality = (speed) => {
-    for (const [quality, range] of Object.entries(speedRanges)) {
-      if (speed >= range.min) return range;
-    }
+  const getSpeedQuality = (speed: number): SpeedRange => {
+    if (speed >= speedRanges.excellent.min) return speedRanges.excellent;
+    if (speed >= speedRanges.good.min) return speedRanges.good;
+    if (speed >= speedRanges.fair.min) return speedRanges.fair;
     return speedRanges.poor;
   };
 
@@ -77,7 +139,6 @@ const SpeedTestPage = () => {
     setTestStatus('testing');
     setProgress(0);
     setTestPhase('ping');
-    setIsAnimating(true);
 
     // Simulate ping test
     setTimeout(() => {
@@ -114,7 +175,7 @@ const SpeedTestPage = () => {
   };
 
   const completeTest = () => {
-    const newResults = {
+    const newResults: TestResult = {
       download: Math.random() * 100 + 20, // 20-120 Mbps
       upload: Math.random() * 50 + 10,   // 10-60 Mbps
       ping: Math.random() * 30 + 5,      // 5-35 ms
@@ -126,7 +187,6 @@ const SpeedTestPage = () => {
 
     setResults(newResults);
     setTestStatus('complete');
-    setIsAnimating(false);
 
     // Add to history
     setHistory(prev => [newResults, ...prev.slice(0, 4)]);
@@ -167,29 +227,37 @@ const SpeedTestPage = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
 
-  const gaugeVariants = {
-    initial: { scale: 0.8, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    pulse: {
-      scale: [1, 1.05, 1],
-      transition: { duration: 2, repeat: Infinity }
+  const speedGuideItems: SpeedGuideItem[] = [
+    {
+      icon: <FiDownload className="w-8 h-8" />,
+      title: "Download Speed",
+      description: "How fast you can receive data from the internet. Affects streaming, browsing, and downloading.",
+      good: "25+ Mbps",
+      color: "blue"
+    },
+    {
+      icon: <FiUpload className="w-8 h-8" />,
+      title: "Upload Speed",
+      description: "How fast you can send data to the internet. Important for video calls, gaming, and cloud backups.",
+      good: "10+ Mbps",
+      color: "green"
+    },
+    {
+      icon: <FiClock className="w-8 h-8" />,
+      title: "Ping & Latency",
+      description: "Response time between your device and the server. Crucial for gaming and real-time applications.",
+      good: "< 30 ms",
+      color: "purple"
     }
-  };
-
-  const progressBarVariants = {
-    initial: { width: '0%' },
-    animate: { width: '100%' }
-  };
+  ];
 
   return (
-
     <>
-
       <Navbar />
       
       <div className="min-h-screen bg-gray-950">
@@ -560,33 +628,11 @@ const SpeedTestPage = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              {[
-                {
-                  icon: <FiDownload className="w-8 h-8" />,
-                  title: "Download Speed",
-                  description: "How fast you can receive data from the internet. Affects streaming, browsing, and downloading.",
-                  good: "25+ Mbps",
-                  color: "blue"
-                },
-                {
-                  icon: <FiUpload className="w-8 h-8" />,
-                  title: "Upload Speed",
-                  description: "How fast you can send data to the internet. Important for video calls, gaming, and cloud backups.",
-                  good: "10+ Mbps",
-                  color: "green"
-                },
-                {
-                  icon: <FiClock className="w-8 h-8" />,
-                  title: "Ping & Latency",
-                  description: "Response time between your device and the server. Crucial for gaming and real-time applications.",
-                  good: "< 30 ms",
-                  color: "purple"
-                }
-              ].map((item, index) => (
+              {speedGuideItems.map((item, index) => (
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  whileHover="hover"
+                  whileHover={{ scale: 1.05 }}
                   className={`p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${colorMap[item.color].border}`}
                 >
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${colorMap[item.color].bg} mb-4`}>
@@ -607,9 +653,7 @@ const SpeedTestPage = () => {
       </div>
 
       <RexifiFooter />
-
     </>
-
   );
 };
 

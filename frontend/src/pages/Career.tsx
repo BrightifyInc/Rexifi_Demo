@@ -1,25 +1,71 @@
-import React, { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiMapPin, FiClock, FiDollarSign, FiUsers, FiAward, FiZap, FiPlay, FiCheck, FiArrowRight, FiMail, FiLinkedin, FiTwitter, FiStar } from 'react-icons/fi';
+import { FiSearch, FiMapPin, FiClock, FiDollarSign, FiUsers, FiAward, FiZap, FiPlay, FiArrowRight, FiStar } from 'react-icons/fi';
 import Navbar from '../components/Navbar';
 import RexifiFooter from '../components/Footer';
 
+// Define types
+interface JobCategory {
+  id: string;
+  label: string;
+  count: number;
+  icon: JSX.Element;
+  color: 'blue' | 'purple' | 'green' | 'orange';
+}
+
+interface JobOpening {
+  id: number;
+  title: string;
+  category: string;
+  type: string;
+  location: string;
+  salary: string;
+  experience: string;
+  posted: string;
+  description: string;
+  requirements: string[];
+  skills: string[];
+  urgent: boolean;
+  featured: boolean;
+}
+
+interface Benefit {
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  color: 'blue' | 'purple' | 'green' | 'orange';
+}
+
+interface EmployeeStory {
+  name: string;
+  role: string;
+  tenure: string;
+  quote: string;
+  image: string;
+  achievements: string[];
+}
+
+interface ColorMap {
+  bg: string;
+  text: string;
+  border: string;
+  hover: string;
+  gradient: string;
+  solid: string;
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  color: 'blue' | 'purple' | 'green' | 'orange';
+}
 
 const CareersPage = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null);
   const [isApplicationOpen, setIsApplicationOpen] = useState(false);
-  const [activeBenefit, setActiveBenefit] = useState(0);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    position: '',
-    resume: null,
-    coverLetter: ''
-  });
 
-  const jobCategories = [
+  const jobCategories: JobCategory[] = [
     { id: 'all', label: 'All Roles', count: 24, icon: <FiUsers />, color: 'blue' },
     { id: 'tech', label: 'Technology', count: 12, icon: <FiZap />, color: 'purple' },
     { id: 'sales', label: 'Sales & Marketing', count: 6, icon: <FiDollarSign />, color: 'green' },
@@ -27,7 +73,7 @@ const CareersPage = () => {
     { id: 'support', label: 'Customer Support', count: 2, icon: <FiAward />, color: 'blue' }
   ];
 
-  const jobOpenings = [
+  const jobOpenings: JobOpening[] = [
     {
       id: 1,
       title: "Senior Frontend Developer",
@@ -105,7 +151,7 @@ const CareersPage = () => {
     }
   ];
 
-  const benefits = [
+  const benefits: Benefit[] = [
     {
       title: "Competitive Compensation",
       description: "Industry-leading salaries with performance bonuses and stock options",
@@ -132,7 +178,7 @@ const CareersPage = () => {
     }
   ];
 
-  const employeeStories = [
+  const employeeStories: EmployeeStory[] = [
     {
       name: "Bright Iweobi O.",
       role: "Lead Frontend Developer",
@@ -151,7 +197,7 @@ const CareersPage = () => {
     }
   ];
 
-  const colorMap = {
+  const colorMap: Record<'blue' | 'purple' | 'green' | 'orange', ColorMap> = {
     blue: {
       bg: "bg-blue-500/10",
       text: "text-blue-400",
@@ -207,7 +253,7 @@ const CareersPage = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     }
   };
@@ -217,10 +263,15 @@ const CareersPage = () => {
     hover: { scale: 1.02, y: -5 }
   };
 
+  const stats: Stat[] = [
+    { number: "50+", label: "Team Members", color: "blue" },
+    { number: "15", label: "Countries", color: "purple" },
+    { number: "98%", label: "Employee Satisfaction", color: "green" },
+    { number: "24", label: "Open Roles", color: "orange" }
+  ];
+
   return (
-
     <>
-
       <Navbar />
 
       <div className="min-h-screen bg-gray-950">
@@ -266,7 +317,12 @@ const CareersPage = () => {
                 className="flex flex-col sm:flex-row gap-4 justify-center items-center"
               >
                 <button 
-                  onClick={() => document.getElementById('open-positions').scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    const element = document.getElementById('open-positions');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
                   className="group bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
                 >
                   View Open Positions
@@ -289,12 +345,7 @@ const CareersPage = () => {
               transition={{ delay: 0.8 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto"
             >
-              {[
-                { number: "50+", label: "Team Members", color: "blue" },
-                { number: "15", label: "Countries", color: "purple" },
-                { number: "98%", label: "Employee Satisfaction", color: "green" },
-                { number: "24", label: "Open Roles", color: "orange" }
-              ].map((stat, index) => (
+              {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
@@ -331,12 +382,8 @@ const CareersPage = () => {
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  whileHover="hover"
-                  initial="rest"
-                  animate="rest"
-                  // variants={cardHoverVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
                   className={`group p-8 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 ${colorMap[benefit.color].border} transition-all duration-300`}
-                  onMouseEnter={() => setActiveBenefit(index)}
                 >
                   <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${colorMap[benefit.color].bg} mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <div className={colorMap[benefit.color].text}>
@@ -418,88 +465,90 @@ const CareersPage = () => {
               className="grid grid-cols-1 lg:grid-cols-2 gap-6"
             >
               <AnimatePresence>
-                {filteredJobs.map((job) => (
-                  <motion.div
-                    key={job.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    whileHover="hover"
-                    variants={cardHoverVariants}
-                    onClick={() => setSelectedJob(job)}
-                    className={`group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
-                      selectedJob?.id === job.id 
-                        ? `${colorMap[jobCategories.find(c => c.id === job.category)?.color || 'blue'].border} border-2 shadow-2xl` 
-                        : 'border-gray-700 hover:border-gray-600'
-                    } ${job.featured ? 'ring-2 ring-yellow-400/20' : ''}`}
-                  >
-                    {/* Header */}
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
-                          {job.title}
-                        </h3>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className="text-sm text-gray-400">{job.type}</span>
-                          <span className="text-gray-600">•</span>
-                          <span className="text-sm text-gray-400 flex items-center">
-                            <FiMapPin className="w-4 h-4 mr-1" />
-                            {job.location}
+                {filteredJobs.map((job) => {
+                  const categoryColor = jobCategories.find(c => c.id === job.category)?.color || 'blue';
+                  return (
+                    <motion.div
+                      key={job.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      whileHover={{ scale: 1.02, y: -5 }}
+                      onClick={() => setSelectedJob(job)}
+                      className={`group p-6 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border-2 cursor-pointer transition-all duration-300 ${
+                        selectedJob?.id === job.id 
+                          ? `${colorMap[categoryColor].border} border-2 shadow-2xl` 
+                          : 'border-gray-700 hover:border-gray-600'
+                      } ${job.featured ? 'ring-2 ring-yellow-400/20' : ''}`}
+                    >
+                      {/* Header */}
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
+                            {job.title}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-sm text-gray-400">{job.type}</span>
+                            <span className="text-gray-600">•</span>
+                            <span className="text-sm text-gray-400 flex items-center">
+                              <FiMapPin className="w-4 h-4 mr-1" />
+                              {job.location}
+                            </span>
+                          </div>
+                        </div>
+                        {job.urgent && (
+                          <span className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-medium">
+                            🔥 Urgent
                           </span>
+                        )}
+                      </div>
+
+                      {/* Details */}
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <FiDollarSign className="w-4 h-4 text-green-400" />
+                          {job.salary}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                          <FiClock className="w-4 h-4 text-blue-400" />
+                          {job.experience}
                         </div>
                       </div>
-                      {job.urgent && (
-                        <span className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-medium">
-                          🔥 Urgent
-                        </span>
-                      )}
-                    </div>
 
-                    {/* Details */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-400">
-                        <FiDollarSign className="w-4 h-4 text-green-400" />
-                        {job.salary}
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">{job.description}</p>
+
+                      {/* Skills */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {job.skills.slice(0, 3).map((skill, index) => (
+                          <span key={index} className="px-3 py-1 bg-white/10 rounded-full text-gray-300 text-xs">
+                            {skill}
+                          </span>
+                        ))}
+                        {job.skills.length > 3 && (
+                          <span className="px-3 py-1 bg-white/5 rounded-full text-gray-400 text-xs">
+                            +{job.skills.length - 3} more
+                          </span>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-400">
-                        <FiClock className="w-4 h-4 text-blue-400" />
-                        {job.experience}
+
+                      {/* Footer */}
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">{job.posted}</span>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedJob(job);
+                            setIsApplicationOpen(true);
+                          }}
+                          className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                        >
+                          Apply Now →
+                        </button>
                       </div>
-                    </div>
-
-                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">{job.description}</p>
-
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {job.skills.slice(0, 3).map((skill, index) => (
-                        <span key={index} className="px-3 py-1 bg-white/10 rounded-full text-gray-300 text-xs">
-                          {skill}
-                        </span>
-                      ))}
-                      {job.skills.length > 3 && (
-                        <span className="px-3 py-1 bg-white/5 rounded-full text-gray-400 text-xs">
-                          +{job.skills.length - 3} more
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-500">{job.posted}</span>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedJob(job);
-                          setIsApplicationOpen(true);
-                        }}
-                        className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
-                      >
-                        Apply Now →
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </motion.div>
           </div>
@@ -528,8 +577,7 @@ const CareersPage = () => {
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  whileHover="hover"
-                  // variants={cardHoverVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
                   className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700/50"
                 >
                   <div className="flex items-center gap-4 mb-4">
@@ -585,14 +633,8 @@ const CareersPage = () => {
       </div>
 
       <RexifiFooter />
-      
     </>
-
   );
 };
 
 export default CareersPage;
-
-
-
-
