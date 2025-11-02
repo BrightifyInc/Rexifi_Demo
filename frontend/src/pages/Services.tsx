@@ -592,7 +592,6 @@
 
 
 
-
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiWifi, FiBriefcase, FiStar, FiCheck, FiPlay, FiUsers, FiShield, FiZap, FiGlobe } from 'react-icons/fi';
@@ -818,32 +817,10 @@ const ServicesSection = () => {
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
   // Simple variants without complex transition objects
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
-  };
-
-  const slideIn = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0 }
-  };
-
-  const scaleIn = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1 }
   };
 
   return (
