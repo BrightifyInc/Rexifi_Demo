@@ -164,8 +164,6 @@
 
 
 
-
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -180,6 +178,28 @@ import {
   FiTrendingUp
 } from 'react-icons/fi';
 
+interface UserData {
+  username?: string;
+  plan?: string;
+  email?: string;
+}
+
+interface NavigationItem {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  path: string;
+}
+
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+  userData: UserData;
+  onLogout: () => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
 const Sidebar = ({ 
   sidebarOpen, 
   setSidebarOpen, 
@@ -187,7 +207,7 @@ const Sidebar = ({
   onLogout,
   activeTab,
   setActiveTab 
-}) => {
+}: SidebarProps) => {
   const location = useLocation();
 
   // Determine active tab based on current route
@@ -201,7 +221,7 @@ const Sidebar = ({
     return 'overview';
   };
 
-  const navigationItems = [
+  const navigationItems: NavigationItem[] = [
     { id: 'overview', icon: FiActivity, label: 'Overview', path: '/dashboard' },
     { id: 'usage', icon: FiTrendingUp, label: 'Usage Analytics', path: '/usage' },
     { id: 'billing', icon: FiDollarSign, label: 'Billing', path: '/billing' },
@@ -211,7 +231,7 @@ const Sidebar = ({
 
   const currentActiveTab = activeTab || getActiveTabFromRoute();
 
-  const handleNavClick = (itemId) => {
+  const handleNavClick = (itemId: string) => {
     if (setActiveTab) {
       setActiveTab(itemId);
     }
