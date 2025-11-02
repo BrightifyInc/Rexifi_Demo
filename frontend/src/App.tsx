@@ -5,7 +5,6 @@ import MainHome from "./pages/mainHome";
 import AboutUs from "./pages/AboutUs";
 import CourageMap from "./pages/CourageMap";
 import Press from "./pages/Press";
-import Dashboard from "./backend/Dashboard";
 import InternetPlans from "./pages/InternetPlans";
 import SpeedTest from "./pages/SpeedTest";
 import Reliability from "./pages/Reliability";
@@ -19,6 +18,7 @@ import GetFreeSurvey from "./pages/GetFreeSurvey";
 
 import Team from "./pages/Team";
 
+import Dashboard from "./backend/Dashboard";
 import Billing from "./backend/Billing";
 import Settings from "./backend/Settings"
 import UserSupport from "./backend/UserSupport"
