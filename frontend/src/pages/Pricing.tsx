@@ -113,7 +113,7 @@ const Pricing = () => {
         y: 0,
         transition: {
           duration: 0.6,
-          ease: "easeOut"
+          ease: [0.25, 0.46, 0.45, 0.94] // Cubic bezier equivalent of "easeOut"
         }
       }
     };
@@ -128,13 +128,22 @@ const Pricing = () => {
               viewport={{ once: true }}
               variants={containerVariants}
             >
-              <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <motion.h2 
+                variants={itemVariants} 
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+              >
                 Ready to Transform Your <span className="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">Connectivity</span>?
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <motion.p 
+                variants={itemVariants} 
+                className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+              >
                 Join thousands of satisfied customers who trusted Rexifi for their internet solutions
               </motion.p>
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.div 
+                variants={itemVariants} 
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
                 <motion.button
                   onClick={() => setIsSurveyModalOpen(true)}
                   whileHover={{ scale: 1.05 }}

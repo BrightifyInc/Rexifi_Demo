@@ -27,7 +27,7 @@ interface CoverageArea {
 interface TechnologyType {
   color: 'blue' | 'purple' | 'green' | 'orange';
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }
 
 interface ColorMap {

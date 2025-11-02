@@ -240,7 +240,7 @@
 // export default Login;
 
 
-import { useEffect, useState, FormEvent, ChangeEvent } from "react";
+import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';

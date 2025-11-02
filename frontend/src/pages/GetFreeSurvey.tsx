@@ -36,7 +36,7 @@ interface PropertyType {
 }
 
 interface SurveyBenefit {
-  icon: JSX.Element;
+  icon: React.ReactElement;
   title: string;
   description: string;
 }

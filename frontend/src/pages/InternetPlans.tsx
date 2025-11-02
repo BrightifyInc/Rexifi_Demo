@@ -17,7 +17,7 @@ interface Plan {
 
 interface PlanType {
   color: 'blue' | 'purple' | 'green' | 'orange';
-  icon: JSX.Element;
+  icon: React.ReactElement;
   title: string;
   description: string;
   plans: Plan[];

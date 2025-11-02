@@ -9,7 +9,7 @@ interface JobCategory {
   id: string;
   label: string;
   count: number;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: 'blue' | 'purple' | 'green' | 'orange';
 }
 
@@ -32,7 +32,7 @@ interface JobOpening {
 interface Benefit {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: 'blue' | 'purple' | 'green' | 'orange';
 }
 
@@ -258,10 +258,7 @@ const CareersPage = () => {
     }
   };
 
-  const cardHoverVariants = {
-    rest: { scale: 1, y: 0 },
-    hover: { scale: 1.02, y: -5 }
-  };
+  // Removed unused cardHoverVariants since it was declared but never used
 
   const stats: Stat[] = [
     { number: "50+", label: "Team Members", color: "blue" },

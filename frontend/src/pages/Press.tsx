@@ -65,21 +65,11 @@ interface Category {
 interface Stat {
   number: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: keyof ColorMap;
 }
 
-interface MediaAsset {
-  name: string;
-  format: string;
-  size: string;
-}
-
-interface Contact {
-  name: string;
-  role: string;
-  email: string;
-}
+// Removed unused MediaAsset and Contact interfaces since they were declared but never used
 
 const PressPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');

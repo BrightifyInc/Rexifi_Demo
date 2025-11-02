@@ -6,7 +6,7 @@ import { FiAward, FiUsers, FiGlobe, FiStar, FiArrowRight } from "react-icons/fi"
 interface Service {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
   color: 'blue' | 'purple' | 'green' | 'orange';
   link: string;
 }
@@ -386,7 +386,7 @@ const ServicesSection = () => {
 };
 
 // CountUp Component with smooth animations
-const CountUp: React.FC<CountUpProps> = ({ value, duration = 2, delay = 0 }) => {
+const CountUp: React.FC<CountUpProps> = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
@@ -415,8 +415,7 @@ const AnimatedStat: React.FC<AnimatedStatProps> = ({
   suffix = "", 
   label, 
   color = "blue", 
-  delay = 0,
-  duration = 2 
+  delay = 0
 }) => {
   const colorClasses = {
     blue: { bg: "bg-blue-500/10", text: "text-blue-400" },
@@ -437,7 +436,7 @@ const AnimatedStat: React.FC<AnimatedStatProps> = ({
         <Icon className={`w-8 h-8 ${colorClasses[color].text}`} />
       </div>
       <h3 className="text-4xl font-bold text-white mb-2">
-        <CountUp value={value} duration={duration} delay={delay} />{suffix}
+        <CountUp value={value} />{suffix}
       </h3>
       <p className="text-gray-400">{label}</p>
     </motion.div>
@@ -473,7 +472,6 @@ const About = () => {
               label="Happy Customers"
               color="blue"
               delay={0}
-              duration={3}
             />
   
             {/* Stat 2 - Cities Coverage */}
@@ -484,7 +482,6 @@ const About = () => {
               label="Cities Covered"
               color="green"
               delay={0.1}
-              duration={2.5}
             />
   
             {/* Stat 3 - Uptime Guarantee */}
@@ -495,7 +492,6 @@ const About = () => {
               label="Uptime Guarantee"
               color="purple"
               delay={0.2}
-              duration={2}
             />
   
             {/* Stat 4 - Rating */}
@@ -510,7 +506,7 @@ const About = () => {
                 <FiStar className="w-8 h-8 text-yellow-400" />
               </div>
               <h3 className="text-4xl font-bold text-white mb-2">
-                <CountUp value={4.8} duration={2} delay={0.3} />
+                <CountUp value={4.8} />
                 <span className="text-2xl">/5</span>
               </h3>
               <div className="flex justify-center items-center mb-2">
