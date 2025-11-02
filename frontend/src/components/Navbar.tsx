@@ -292,7 +292,7 @@ const Header: React.FC = () => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 hidden"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
             {theme === 'light' ? (
@@ -319,6 +319,7 @@ const Header: React.FC = () => {
             </svg>
           </button>
         </div>
+        
       </div>
     </header>
   );
