@@ -17,6 +17,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sphere } from "@react-three/drei";
 import { pointsInner, pointsOuter } from "../assets/utils";
 import { Link } from 'react-router-dom';
+import * as THREE from 'three'; // Import THREE
 
 import logo from "../assets/img/logo.png";
 

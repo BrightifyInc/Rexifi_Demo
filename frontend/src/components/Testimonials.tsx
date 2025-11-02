@@ -1,13 +1,10 @@
-
-
-
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 
 const RexifiTestimonials = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const sliderRef = useRef(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   // Testimonial data
   const testimonials = [
@@ -57,12 +54,16 @@ const RexifiTestimonials = () => {
     setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
   // Star rating component
-  const StarRating = ({ rating }) => (
+  interface StarRatingProps {
+    rating: number;
+  }
+
+  const StarRating = ({ rating }: StarRatingProps) => (
     <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
         <motion.div
@@ -184,7 +185,7 @@ const RexifiTestimonials = () => {
                           { number: "1M+", label: "Happy Customers" },
                           { number: "24/7", label: "Support Available" },
                           { number: "10Gbps", label: "Max Speed" }
-                        ].map((stat, idx) => (
+                        ].map((stat, idx: number) => (
                           <motion.div
                             key={idx}
                             className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10 shadow-lg"
@@ -213,7 +214,7 @@ const RexifiTestimonials = () => {
 
           {/* Dots Indicator */}
           <div className="flex justify-center gap-3 mt-12">
-            {testimonials.map((_, index) => (
+            {testimonials.map((_, index: number) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}

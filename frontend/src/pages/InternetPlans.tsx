@@ -77,8 +77,10 @@ interface Stat {
   color: keyof ColorMap;
 }
 
+type PlanKey = keyof InternetPlansData;
+
 const InternetPlansPage = () => {
-  const [activePlanTab, setActivePlanTab] = useState<keyof InternetPlansData>('fiber');
+  const [activePlanTab, setActivePlanTab] = useState<PlanKey>('fiber');
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
 
   const colorMap: ColorMap = {
@@ -411,13 +413,13 @@ const InternetPlansPage = () => {
               variants={containerVariants}
               className="flex flex-wrap justify-center gap-4 mb-12"
             >
-              {Object.entries(internetPlans).map(([key, plan]) => (
+              {(Object.entries(internetPlans) as [PlanKey, PlanType][]).map(([key, plan]) => (
                 <motion.button
                   key={key}
                   variants={itemVariants}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setActivePlanTab(key as keyof InternetPlansData)}
+                  onClick={() => setActivePlanTab(key)}
                   className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-300 ${
                     activePlanTab === key
                       ? `${colorMap[plan.color].solid} text-white shadow-2xl`
