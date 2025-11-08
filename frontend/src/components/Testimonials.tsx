@@ -91,42 +91,41 @@ const RexifiTestimonials = () => {
 
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
             What Our <span className="text-cyan-400">Customers Say</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto px-2">
             Join thousands of satisfied customers experiencing the future of internet connectivity
           </p>
         </motion.div>
 
         {/* Main Slider Container */}
         <div className="relative">
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows - Smaller on mobile */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
+            className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
           >
-            <ChevronLeft className="w-6 h-6 text-white group-hover:text-cyan-400" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:text-cyan-400" />
           </button>
           
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
+            className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
           >
-            <ChevronRight className="w-6 h-6 text-white group-hover:text-cyan-400" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white group-hover:text-cyan-400" />
           </button>
 
-          {/* Slider */}
-          <div ref={sliderRef} className="relative h-96">
+          {/* Slider - Adjusted height for mobile */}
+          <div ref={sliderRef} className="relative h-auto min-h-[500px] sm:min-h-[400px] md:h-96">
             <AnimatePresence mode="wait">
               {testimonials.map((testimonial, index) => (
                 index === currentSlide && (
@@ -138,47 +137,47 @@ const RexifiTestimonials = () => {
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="absolute inset-0"
                   >
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center">
                       {/* Testimonial Card */}
                       <motion.div
-                        className="bg-white/10 backdrop-blur-md rounded-2xl p-8 relative border border-white/20 shadow-2xl"
+                        className="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 relative border border-white/20 shadow-lg w-full"
                         whileHover={{ y: -5, borderColor: 'rgba(34, 211, 238, 0.3)' }}
                         transition={{ type: "spring", stiffness: 300 }}
                       >
                         {/* Quote Icon */}
-                        <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                          <Quote className="w-6 h-6 text-white" />
+                        <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                          <Quote className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                         </div>
                         
                         {/* Rating */}
-                        <div className="mb-4">
+                        <div className="mb-3 sm:mb-4">
                           <StarRating rating={testimonial.rating} />
                         </div>
                         
                         {/* Testimonial Text */}
-                        <blockquote className="text-lg text-gray-200 mb-6 leading-relaxed">
+                        <blockquote className="text-sm sm:text-base md:text-lg text-gray-200 mb-4 sm:mb-6 leading-relaxed">
                           "{testimonial.text}"
                         </blockquote>
                         
                         {/* Author Info */}
-                        <div className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-2xl shadow-lg">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-lg sm:text-xl md:text-2xl shadow-lg flex-shrink-0">
                             {testimonial.image}
                           </div>
-                          <div>
-                            <div className="font-semibold text-white">{testimonial.name}</div>
-                            <div className="text-gray-300 text-sm">{testimonial.role}</div>
-                            <div className="text-cyan-400 text-sm font-medium">{testimonial.company}</div>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-white text-sm sm:text-base">{testimonial.name}</div>
+                            <div className="text-gray-300 text-xs sm:text-sm">{testimonial.role}</div>
+                            <div className="text-cyan-400 text-xs sm:text-sm font-medium truncate">{testimonial.company}</div>
                           </div>
                         </div>
                       </motion.div>
 
-                      {/* Stats Side */}
+                      {/* Stats Side - Grid layout for mobile */}
                       <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="grid grid-cols-2 gap-6"
+                        className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 w-full"
                       >
                         {[
                           { number: "99.9%", label: "Uptime Reliability" },
@@ -188,7 +187,7 @@ const RexifiTestimonials = () => {
                         ].map((stat, idx: number) => (
                           <motion.div
                             key={idx}
-                            className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10 shadow-lg"
+                            className="bg-white/5 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 text-center border border-white/10 shadow-lg"
                             whileHover={{ 
                               scale: 1.05,
                               borderColor: 'rgba(34, 211, 238, 0.3)',
@@ -196,10 +195,10 @@ const RexifiTestimonials = () => {
                             }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <div className="text-2xl font-bold text-cyan-400 mb-2">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold text-cyan-400 mb-1 sm:mb-2">
                               {stat.number}
                             </div>
-                            <div className="text-sm text-gray-300 font-medium">
+                            <div className="text-xs sm:text-sm text-gray-300 font-medium leading-tight">
                               {stat.label}
                             </div>
                           </motion.div>
@@ -213,45 +212,49 @@ const RexifiTestimonials = () => {
           </div>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center gap-3 mt-12">
+          <div className="flex justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 md:mt-12">
             {testimonials.map((_, index: number) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`transition-all duration-300 ${
                   index === currentSlide 
-                    ? 'bg-cyan-400 w-8 shadow-lg shadow-cyan-400/25' 
+                    ? 'bg-cyan-400 shadow-lg shadow-cyan-400/25' 
                     : 'bg-white/30 hover:bg-white/50'
+                } ${
+                  index === currentSlide 
+                    ? 'w-6 sm:w-8 h-2 sm:h-3 rounded-lg' 
+                    : 'w-2 h-2 sm:w-3 sm:h-3 rounded-full'
                 }`}
               />
             ))}
           </div>
         </div>
 
-        {/* CTA Section */}
+        {/* CTA Section - Always visible on mobile, hidden on lg+ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-center mt-32 md:mt-16"
+          className="text-center mt-8 sm:mt-12 md:mt-16"
         >
-          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 backdrop-blur-md rounded-2xl p-8 text-white border border-white/20 shadow-2xl">
-            <h3 className="text-2xl font-bold mb-4">
+          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white border border-white/20 shadow-lg">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">
               Ready to Experience Rexifi?
             </h3>
-            <p className="mb-6 text-gray-200">
+            <p className="mb-4 sm:mb-6 text-gray-200 text-sm sm:text-base">
               Join our community of satisfied customers and transform your internet experience today.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <motion.button
-                className="bg-cyan-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors shadow-lg shadow-cyan-500/25"
+                className="bg-cyan-500 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors shadow-lg shadow-cyan-500/25 text-sm sm:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 Check Availability
               </motion.button>
               <motion.button
-                className="border-2 border-white/30 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors backdrop-blur-sm"
+                className="border-2 border-white/30 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors backdrop-blur-sm text-sm sm:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -266,3 +269,172 @@ const RexifiTestimonials = () => {
 };
 
 export default RexifiTestimonials;
+      // <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      //   {/* Section Header */}
+      //   <motion.div
+      //     initial={{ opacity: 0, y: 30 }}
+      //     whileInView={{ opacity: 1, y: 0 }}
+      //     transition={{ duration: 0.6 }}
+      //     className="text-center mb-16"
+      //   >
+      //     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+      //       What Our <span className="text-cyan-400">Customers Say</span>
+      //     </h2>
+      //     <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+      //       Join thousands of satisfied customers experiencing the future of internet connectivity
+      //     </p>
+      //   </motion.div>
+
+      //   {/* Main Slider Container */}
+      //   <div className="relative">
+      //     {/* Navigation Arrows */}
+      //     <button
+      //       onClick={prevSlide}
+      //       className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
+      //     >
+      //       <ChevronLeft className="w-6 h-6 text-white group-hover:text-cyan-400" />
+      //     </button>
+          
+      //     <button
+      //       onClick={nextSlide}
+      //       className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-200 group"
+      //     >
+      //       <ChevronRight className="w-6 h-6 text-white group-hover:text-cyan-400" />
+      //     </button>
+
+      //     {/* Slider */}
+      //     <div ref={sliderRef} className="relative h-96">
+      //       <AnimatePresence mode="wait">
+      //         {testimonials.map((testimonial, index) => (
+      //           index === currentSlide && (
+      //             <motion.div
+      //               key={testimonial.id}
+      //               initial={{ opacity: 0, x: 100 }}
+      //               animate={{ opacity: 1, x: 0 }}
+      //               exit={{ opacity: 0, x: -100 }}
+      //               transition={{ duration: 0.5, ease: "easeInOut" }}
+      //               className="absolute inset-0"
+      //             >
+      //               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      //                 {/* Testimonial Card */}
+      //                 <motion.div
+      //                   className="bg-white/10 backdrop-blur-md rounded-2xl p-8 relative border border-white/20 shadow-2xl"
+      //                   whileHover={{ y: -5, borderColor: 'rgba(34, 211, 238, 0.3)' }}
+      //                   transition={{ type: "spring", stiffness: 300 }}
+      //                 >
+      //                   {/* Quote Icon */}
+      //                   <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+      //                     <Quote className="w-6 h-6 text-white" />
+      //                   </div>
+                        
+      //                   {/* Rating */}
+      //                   <div className="mb-4">
+      //                     <StarRating rating={testimonial.rating} />
+      //                   </div>
+                        
+      //                   {/* Testimonial Text */}
+      //                   <blockquote className="text-lg text-gray-200 mb-6 leading-relaxed">
+      //                     "{testimonial.text}"
+      //                   </blockquote>
+                        
+      //                   {/* Author Info */}
+      //                   <div className="flex items-center gap-4">
+      //                     <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-2xl shadow-lg">
+      //                       {testimonial.image}
+      //                     </div>
+      //                     <div>
+      //                       <div className="font-semibold text-white">{testimonial.name}</div>
+      //                       <div className="text-gray-300 text-sm">{testimonial.role}</div>
+      //                       <div className="text-cyan-400 text-sm font-medium">{testimonial.company}</div>
+      //                     </div>
+      //                   </div>
+      //                 </motion.div>
+
+      //                 {/* Stats Side */}
+      //                 <motion.div
+      //                   initial={{ opacity: 0, scale: 0.9 }}
+      //                   animate={{ opacity: 1, scale: 1 }}
+      //                   transition={{ delay: 0.2 }}
+      //                   className="grid grid-cols-2 gap-6"
+      //                 >
+      //                   {[
+      //                     { number: "99.9%", label: "Uptime Reliability" },
+      //                     { number: "1M+", label: "Happy Customers" },
+      //                     { number: "24/7", label: "Support Available" },
+      //                     { number: "10Gbps", label: "Max Speed" }
+      //                   ].map((stat, idx: number) => (
+      //                     <motion.div
+      //                       key={idx}
+      //                       className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10 shadow-lg"
+      //                       whileHover={{ 
+      //                         scale: 1.05,
+      //                         borderColor: 'rgba(34, 211, 238, 0.3)',
+      //                         backgroundColor: 'rgba(255, 255, 255, 0.1)'
+      //                       }}
+      //                       whileTap={{ scale: 0.95 }}
+      //                     >
+      //                       <div className="text-2xl font-bold text-cyan-400 mb-2">
+      //                         {stat.number}
+      //                       </div>
+      //                       <div className="text-sm text-gray-300 font-medium">
+      //                         {stat.label}
+      //                       </div>
+      //                     </motion.div>
+      //                   ))}
+      //                 </motion.div>
+      //               </div>
+      //             </motion.div>
+      //           )
+      //         ))}
+      //       </AnimatePresence>
+      //     </div>
+
+      //     {/* Dots Indicator */}
+      //     <div className="flex justify-center gap-3 mt-12">
+      //       {testimonials.map((_, index: number) => (
+      //         <button
+      //           key={index}
+      //           onClick={() => goToSlide(index)}
+      //           className={`w-3 h-3 rounded-full transition-all duration-300 ${
+      //             index === currentSlide 
+      //               ? 'bg-cyan-400 w-8 shadow-lg shadow-cyan-400/25' 
+      //               : 'bg-white/30 hover:bg-white/50'
+      //           }`}
+      //         />
+      //       ))}
+      //     </div>
+      //   </div>
+
+      //   {/* CTA Section */}
+      //   <motion.div
+      //     initial={{ opacity: 0, y: 20 }}
+      //     whileInView={{ opacity: 1, y: 0 }}
+      //     transition={{ delay: 0.4 }}
+      //     className="text-center mt-32 md:mt-16"
+      //   >
+      //     <div className="bg-gradient-to-r from-cyan-500/20 to-blue-600/20 backdrop-blur-md rounded-2xl p-8 text-white border border-white/20 shadow-2xl">
+      //       <h3 className="text-2xl font-bold mb-4">
+      //         Ready to Experience Rexifi?
+      //       </h3>
+      //       <p className="mb-6 text-gray-200">
+      //         Join our community of satisfied customers and transform your internet experience today.
+      //       </p>
+      //       <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      //         <motion.button
+      //           className="bg-cyan-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors shadow-lg shadow-cyan-500/25"
+      //           whileHover={{ scale: 1.05 }}
+      //           whileTap={{ scale: 0.95 }}
+      //         >
+      //           Check Availability
+      //         </motion.button>
+      //         <motion.button
+      //           className="border-2 border-white/30 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors backdrop-blur-sm"
+      //           whileHover={{ scale: 1.05 }}
+      //           whileTap={{ scale: 0.95 }}
+      //         >
+      //           View Plans
+      //         </motion.button>
+      //       </div>
+      //     </div>
+      //   </motion.div>
+      // </div>
